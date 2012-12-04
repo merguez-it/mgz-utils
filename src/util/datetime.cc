@@ -1,6 +1,10 @@
 #include "util/datetime.h"
 #include "util/vector.h"
 
+#ifdef __WIN32__ 
+#include "internal/windows/strptime.c"
+#endif
+
 #define STRFTIME_BUFFER_SIZE 1024
 
 namespace mgz {

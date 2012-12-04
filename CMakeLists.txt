@@ -3,12 +3,25 @@ project(MGZ_UTILS)
 
 include(FindDoxygen)
 include(CheckFunctionExists) 
+include(CheckIncludeFiles)
+include(CheckIncludeFileCXX)
 
 add_definitions(-Wall)
 if(DEBUG)
   set(CMAKE_C_FLAGS "-g -O0 -DDEBUG")
   set(CMAKE_CXX_FLAGS "-g -O0 -DDEBUG")
   set(CMAKE_VERBOSE_MAKEFILE ON)
+endif()
+
+if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__WIN32__")
+  set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -D__WIN32__")
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__APPLE__")
+  set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -D__APPLE__")
+else()
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__UNIX__")
+  set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -D__UNIX__")
 endif()
 
 if(CPP11) 
@@ -23,6 +36,12 @@ if(HAVE_VASPRINTF)
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DHAVE_VASPRINTF")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHAVE_VASPRINTF")
 endif(HAVE_VASPRINTF)
+
+CHECK_INCLUDE_FILES(locale.h HAVE_LOCALE_H)
+if(HAVE_LOCALE_H)
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DHAVE_LOCALE_H")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHAVE_LOCALE_H")
+endif(HAVE_LOCALE_H)
 
 # Documentation
 if(DOXYGEN_FOUND)
