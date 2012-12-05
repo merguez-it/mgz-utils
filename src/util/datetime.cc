@@ -105,6 +105,24 @@ namespace mgz {
       return timeinfo_.tm_sec;
     }
 
+    bool datetime::leapYear() const {
+      if(year() % 4 != 0) return false;
+      if(year() % 400 == 0) return true;
+      if(year() % 100 == 0) return false;
+      return true;
+    }
+
+    static int daysInMonths[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    int datetime::daysInMonth() const {
+      int days = daysInMonths[mon()-1];
+
+      if(mon() == 1 && leapYear()) {
+        days += 1;
+      }
+
+      return days;
+    }
+
     double datetime::interval(datetime dt) {
       return difftime(dt.to_time(), to_time());
     }
@@ -117,6 +135,77 @@ namespace mgz {
       return strftime(format);
     }
 
+    std::string datetime::to_http() const {
+      return strftime("%a, %d %b %Y %T GMT");
+    }
+
+    datetime & datetime::next_sec(int i) {
+      time_t rt = to_time() + i;
+      timeinfo_ = *localtime(&rt);
+      return *this;
+    }
+    datetime & datetime::next_min(int i) {
+      return next_sec(60 * i);
+    }
+    datetime & datetime::next_hour(int i) {
+      return next_min(60 * i);
+    }
+    datetime & datetime::next_day(int i) {
+      return next_hour(24 * i);
+    }
+    datetime & datetime::next_month(int i) {
+      bool isLastDayInMonth = day() == daysInMonth();
+
+      int year = timeinfo_.tm_year + i / 12;
+      int month = timeinfo_.tm_mon + i % 12;
+
+      if(month > 11) {
+        year += 1;
+        month -= 12;
+      }
+      datetime dt(year+1900, month+1, 1);
+
+      int day;
+      if(isLastDayInMonth) {
+        day = dt.daysInMonth();
+      } else {
+        day = std::min(timeinfo_.tm_mday, dt.daysInMonth());
+      }
+
+      timeinfo_.tm_year = year;
+      timeinfo_.tm_mon = month;
+      timeinfo_.tm_mday = day;
+
+      return *this;
+    }
+    datetime & datetime::next_year(int i) {
+      timeinfo_.tm_year += i;
+      return *this;
+    }
+
+    datetime & datetime::prev_sec(int i) {
+      time_t rt = to_time() - i;
+      timeinfo_ = *localtime(&rt);
+      return *this;
+    }
+    datetime & datetime::prev_min(int i) {
+      return prev_sec(60 * i);
+    }
+    datetime & datetime::prev_hour(int i) {
+      return prev_min(60 * i);
+    }
+    datetime & datetime::prev_day(int i) {
+      return prev_hour(24 *i);
+    }
+    datetime & datetime::prev_month(int i) {
+      next_month(-1*i);
+      return *this;
+    }
+    datetime & datetime::prev_year(int i) {
+      timeinfo_.tm_year -= i;
+      return *this;
+    }
+
     std::string datetime::strftime(std::string format) const {
       char buffer[STRFTIME_BUFFER_SIZE] = {0};
       if(0 == ::strftime(buffer, STRFTIME_BUFFER_SIZE, format.c_str(), &timeinfo_)) {
@@ -125,7 +214,6 @@ namespace mgz {
 
       return std::string(buffer);
     }
-
 
     bool datetime::operator==(datetime dt) {
       return interval(dt) == 0;

@@ -23,9 +23,27 @@ namespace mgz {
         int min() const;
         int sec() const;
 
+        bool leapYear() const;
+        int daysInMonth() const;
+
         double interval(datetime dt);
         time_t to_time();
         std::string to_sql() const;
+        std::string to_http() const;
+
+        datetime & next_sec(int i = 1);
+        datetime & next_min(int i = 1);
+        datetime & next_hour(int i = 1);
+        datetime & next_day(int i = 1);
+        datetime & next_month(int i = 1);
+        datetime & next_year(int i = 1);
+
+        datetime & prev_sec(int i = 1);
+        datetime & prev_min(int i = 1);
+        datetime & prev_hour(int i = 1);
+        datetime & prev_day(int i = 1);
+        datetime & prev_month(int i = 1);
+        datetime & prev_year(int i = 1);
 
         std::string strftime(std::string format) const;
 
