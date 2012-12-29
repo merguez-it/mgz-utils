@@ -16,8 +16,14 @@ configure_file(
   @ONLY
   )
 set(MGZ_UTIL_HEADERS 
+  ${MGZ_UTILS_SOURCE_DIR}/include/util/any.h
   ${MGZ_UTILS_SOURCE_DIR}/include/util/datetime.h
+  ${MGZ_UTILS_SOURCE_DIR}/include/util/exception.h
+  ${MGZ_UTILS_SOURCE_DIR}/include/util/map.h
+  ${MGZ_UTILS_SOURCE_DIR}/include/util/singleton.h
   ${MGZ_UTILS_SOURCE_DIR}/include/util/string.h
+  ${MGZ_UTILS_SOURCE_DIR}/include/util/types.h
+  ${MGZ_UTILS_SOURCE_DIR}/include/util/vector.h
   )
 install(FILES ${MGZ_UTIL_HEADERS} DESTINATION include/util)
 install(TARGETS mgz-util mgz-util-s
