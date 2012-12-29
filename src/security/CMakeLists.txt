@@ -10,6 +10,11 @@ add_library(mgz-security SHARED ${MGZ_SECURITY_SOURCES})
 target_link_libraries(mgz-security mgz-util)
 add_library(mgz-security-s STATIC ${MGZ_SECURITY_SOURCES})
 
+configure_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/mgz-security.pc.in
+  ${MGZ_UTILS_OUTPUT_TEMP_DIR}/mgz-security.pc
+  @ONLY
+  )
 set(MGZ_SECURITY_HEADERS 
   ${MGZ_UTILS_SOURCE_DIR}/include/security/md5.h
   ${MGZ_UTILS_SOURCE_DIR}/include/security/sha1.h
@@ -19,3 +24,4 @@ install(FILES ${MGZ_SECURITY_HEADERS} DESTINATION include/security)
 install(TARGETS mgz-security mgz-security-s
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib)
+install(FILES ${MGZ_UTILS_OUTPUT_TEMP_DIR}/mgz-security.pc DESTINATION lib/pkgconfig)

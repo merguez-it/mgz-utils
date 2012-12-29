@@ -10,6 +10,11 @@ set(MGZ_UTIL_SOURCES
 add_library(mgz-util SHARED ${MGZ_UTIL_SOURCES})
 add_library(mgz-util-s STATIC ${MGZ_UTIL_SOURCES})
 
+configure_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/mgz-util.pc.in
+  ${MGZ_UTILS_OUTPUT_TEMP_DIR}/mgz-util.pc
+  @ONLY
+  )
 set(MGZ_UTIL_HEADERS 
   ${MGZ_UTILS_SOURCE_DIR}/include/util/datetime.h
   ${MGZ_UTILS_SOURCE_DIR}/include/util/string.h
@@ -18,3 +23,4 @@ install(FILES ${MGZ_UTIL_HEADERS} DESTINATION include/util)
 install(TARGETS mgz-util mgz-util-s
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib)
+install(FILES ${MGZ_UTILS_OUTPUT_TEMP_DIR}/mgz-util.pc DESTINATION lib/pkgconfig)

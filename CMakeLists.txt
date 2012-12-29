@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 project(MGZ_UTILS)
+set(MGZ_UTILS_VERSION 0.0.2)
 
 include(FindDoxygen)
 include(CheckFunctionExists) 

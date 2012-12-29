@@ -1,0 +1,10 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+includedir=${prefix}/include
+libdir=${exec_prefix}/lib
+
+Name: mkg-security
+Description: mgz-security base library
+Version:@MGZ_UTILS_VERSION@ 
+Cflags: -I${includedir}/security
+Libs: -L${libdir} -lmgz-util -lmgz-security
