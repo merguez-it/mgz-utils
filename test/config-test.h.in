@@ -1,0 +1,7 @@
+#ifndef __MGZ_CONFIG_TEST_H
+#define __MGZ_CONFIG_TEST_H
+
+#define STR(X) #X
+#define MGZ_TESTS_PATH(PATH) STR(${MGZ_TEST_PATH}/data/PATH)
+
+#endif // __MGZ_CONFIG_TEST_H

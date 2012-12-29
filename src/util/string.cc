@@ -1,5 +1,5 @@
 #include "util/string.h"
-#include "internal/varg.h"
+#include "util/internal/varg.h"
 #include <algorithm>
 #include <iostream>
 #include <fstream>
@@ -20,6 +20,25 @@ namespace mgz {
         str_.erase(str_.begin(), str_.end());
       }
       return str_;
+    }
+
+    std::string squeeze(const std::string & str) {
+      std::string result;
+      bool keep = true;
+      for(size_t i = 0; i < str.size(); i++) {
+        char c = str[i];
+        if(c == ' ' || c == '\t') {
+          if(keep) {
+            keep = false;
+            result.append(1, ' ');
+          }   
+        } else {
+          keep = true;
+          result.append(1, c); 
+        }   
+      }   
+
+      return result;
     }
 
     std::vector<std::string>& split(const std::string &s, char delim, std::vector<std::string> &elems) {

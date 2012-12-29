@@ -1,0 +1,1 @@
+This file should have its permissions set to 0654

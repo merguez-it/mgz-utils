@@ -128,3 +128,75 @@ TEST(DateTime, testNextYear) {
   ASSERT_EQ(dt.min(), 59);
   ASSERT_EQ(dt.sec(), 59);
 }
+
+TEST(DateTime, testPrevSec) {
+  mgz::util::datetime dt = mgz::util::datetime::from_sql("2000-04-30 00:00:00");
+  dt.prev_sec(2);
+
+  ASSERT_EQ(dt.year(), 2000);
+  ASSERT_EQ(dt.mon(), 4);
+  ASSERT_EQ(dt.day(), 29);
+  ASSERT_EQ(dt.hour(), 23);
+  ASSERT_EQ(dt.min(), 59);
+  ASSERT_EQ(dt.sec(), 58);
+}
+
+TEST(DateTime, testPrevMin) {
+  mgz::util::datetime dt = mgz::util::datetime::from_sql("2000-04-30 00:00:00");
+  dt.prev_min(2);
+
+  ASSERT_EQ(dt.year(), 2000);
+  ASSERT_EQ(dt.mon(), 4);
+  ASSERT_EQ(dt.day(), 29);
+  ASSERT_EQ(dt.hour(), 23);
+  ASSERT_EQ(dt.min(), 58);
+  ASSERT_EQ(dt.sec(), 0);
+}
+
+TEST(DateTime, testPrevHour) {
+  mgz::util::datetime dt = mgz::util::datetime::from_sql("2000-04-30 00:00:00");
+  dt.prev_hour(2);
+
+  ASSERT_EQ(dt.year(), 2000);
+  ASSERT_EQ(dt.mon(), 4);
+  ASSERT_EQ(dt.day(), 29);
+  ASSERT_EQ(dt.hour(), 22);
+  ASSERT_EQ(dt.min(), 0);
+  ASSERT_EQ(dt.sec(), 0);
+}
+
+TEST(DateTime, testPrevDay) {
+  mgz::util::datetime dt = mgz::util::datetime::from_sql("2000-04-30 00:00:00");
+  dt.prev_day(2);
+
+  ASSERT_EQ(dt.year(), 2000);
+  ASSERT_EQ(dt.mon(), 4);
+  ASSERT_EQ(dt.day(), 28);
+  ASSERT_EQ(dt.hour(), 0);
+  ASSERT_EQ(dt.min(), 0);
+  ASSERT_EQ(dt.sec(), 0);
+}
+
+TEST(DateTime, testPrevMon) {
+  mgz::util::datetime dt = mgz::util::datetime::from_sql("2000-04-30 00:00:00");
+  dt.prev_month(2);
+
+  ASSERT_EQ(dt.year(), 2000);
+  ASSERT_EQ(dt.mon(), 2);
+  ASSERT_EQ(dt.day(), 28);
+  ASSERT_EQ(dt.hour(), 0);
+  ASSERT_EQ(dt.min(), 0);
+  ASSERT_EQ(dt.sec(), 0);
+}
+
+TEST(DateTime, testPrevYear) {
+  mgz::util::datetime dt = mgz::util::datetime::from_sql("2000-04-30 00:00:00");
+  dt.prev_year(2);
+
+  ASSERT_EQ(dt.year(), 1998);
+  ASSERT_EQ(dt.mon(), 4);
+  ASSERT_EQ(dt.day(), 30);
+  ASSERT_EQ(dt.hour(), 0);
+  ASSERT_EQ(dt.min(), 0);
+  ASSERT_EQ(dt.sec(), 0);
+}

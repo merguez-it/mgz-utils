@@ -1,9 +1,9 @@
+#include "config.h"
 #include "util/datetime.h"
+#include "util/internal/strptime.h"
 #include "util/vector.h"
-
-#ifdef __WIN32__ 
-#include "internal/windows/strptime.c"
-#endif
+#include <string.h>
+#include <time.h>
 
 #define STRFTIME_BUFFER_SIZE 1024
 
@@ -12,7 +12,8 @@ namespace mgz {
     datetime::datetime(const datetime & dt) {
       time_t rawtime;
       time(&rawtime);
-      localtime_r(&rawtime, &timeinfo_);
+      struct tm *ti = localtime(&rawtime);
+      memcpy(&timeinfo_, ti, sizeof(*ti));
 
       timeinfo_.tm_year = dt.year() - 1900;
       timeinfo_.tm_mon = dt.mon() - 1;
@@ -26,7 +27,7 @@ namespace mgz {
 
     datetime::datetime(const std::string &f, const std::string &s) {
       memset(&timeinfo_, 0, sizeof(timeinfo_));
-      if(NULL == ::strptime(s.c_str(), f.c_str(), &timeinfo_)) {
+      if(NULL == strptime(s.c_str(), f.c_str(), &timeinfo_)) {
         throw 3; // TODO
       }
       format = f;
@@ -38,7 +39,7 @@ namespace mgz {
       std::vector<std::string>::iterator it;
       for(it = formats.begin(); it != formats.end(); it++) {
         memset(&timeinfo_, 0, sizeof(timeinfo_));
-        if(NULL != ::strptime(s.c_str(), (*it).c_str(), &timeinfo_)) {
+        if(NULL != strptime(s.c_str(), (*it).c_str(), &timeinfo_)) {
           format = *it;
           break;
         }
@@ -48,7 +49,8 @@ namespace mgz {
     datetime::datetime(int year, int month, int day, int hour, int min, int sec) {
       time_t rawtime;
       time(&rawtime);
-      localtime_r(&rawtime, &timeinfo_);
+      struct tm *ti = localtime(&rawtime);
+      memcpy(&timeinfo_, ti, sizeof(*ti));
       timeinfo_.tm_isdst = -1;
 
       if(year > 1899) {
@@ -235,7 +237,7 @@ namespace mgz {
     }
 
     datetime & datetime::operator=(const std::string & dt) {
-      *this = datetime::datetime(dt);
+      *this = datetime(dt);
       return *this;
     }
 

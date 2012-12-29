@@ -1,0 +1,19 @@
+#ifndef __MGZ_CONFIG_H
+#define __MGZ_CONFIG_H
+
+#cmakedefine HAVE_WINDOWS_H 1
+#cmakedefine HAVE_VASPRINTF 1
+#cmakedefine HAVE_VSNPRINTF 1
+#cmakedefine HAVE_STRPTIME 1
+#cmakedefine HAVE_LOCALE_H 1
+#cmakedefine HAVE_SYS_MMAN_H 1
+#cmakedefine HAVE__SC_PAGESIZE 1
+#cmakedefine HAVE_MAPVIEWOFFILE 1
+#cmakedefine HAVE_CREATEFILEMAPPING 1
+#cmakedefine HAVE_UNMAPVIEWOFFILE 1
+#cmakedefine HAVE_ISWOW64PROCESS 1
+#cmakedefine HAVE_GETSYSTEMINFO 1
+#cmakedefine HAVE_GETNATIVESYSTEMINFO 1
+
+#endif // __MGZ_CONFIG_H
+

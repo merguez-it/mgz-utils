@@ -1,4 +1,6 @@
+include_directories(${MGZ_UTILS_OUTPUT_TEMP_DIR})
 add_subdirectory(util)
 add_subdirectory(net)
 add_subdirectory(regex)
-#add_subdirectory(io)
+add_subdirectory(io)
+add_subdirectory(security)

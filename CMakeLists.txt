@@ -3,8 +3,12 @@ project(MGZ_UTILS)
 
 include(FindDoxygen)
 include(CheckFunctionExists) 
+include(CheckSymbolExists)
 include(CheckIncludeFiles)
 include(CheckIncludeFileCXX)
+include(CheckCSourceCompiles)
+include(CheckCCompilerFlag)
+include(CheckCXXCompilerFlag)
 
 add_definitions(-Wall)
 if(DEBUG)
@@ -31,17 +35,40 @@ endif()
 set(MGZ_UTILS_OUTPUT_TEMP_DIR ${CMAKE_BINARY_DIR}/.build)
 file(MAKE_DIRECTORY ${MGZ_UTILS_OUTPUT_TEMP_DIR})
 
+CHECK_FUNCTION_EXISTS(strptime HAVE_STRPTIME)
 CHECK_FUNCTION_EXISTS(vasprintf HAVE_VASPRINTF)
-if(HAVE_VASPRINTF)
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DHAVE_VASPRINTF")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHAVE_VASPRINTF")
-endif(HAVE_VASPRINTF)
-
+CHECK_FUNCTION_EXISTS(vsnprintf HAVE_VSNPRINTF)
 CHECK_INCLUDE_FILES(locale.h HAVE_LOCALE_H)
-if(HAVE_LOCALE_H)
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DHAVE_LOCALE_H")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHAVE_LOCALE_H")
-endif(HAVE_LOCALE_H)
+CHECK_INCLUDE_FILES(windows.h HAVE_WINDOWS_H)
+CHECK_INCLUDE_FILES(sys/mman.h HAVE_SYS_MMAN_H)
+CHECK_C_SOURCE_COMPILES("#include <unistd.h>
+int main(void) {
+sysconf(_SC_PAGESIZE);
+return 0;
+}" HAVE__SC_PAGESIZE) 
+CHECK_SYMBOL_EXISTS(MapViewOfFile windows.h HAVE_MAPVIEWOFFILE)
+CHECK_SYMBOL_EXISTS(CreateFileMapping windows.h HAVE_CREATEFILEMAPPING)
+CHECK_SYMBOL_EXISTS(UnmapViewOfFile windows.h HAVE_UNMAPVIEWOFFILE)
+CHECK_SYMBOL_EXISTS(IsWow64Process windows.h HAVE_ISWOW64PROCESS)
+CHECK_SYMBOL_EXISTS(GetSystemInfo windows.h HAVE_GETSYSTEMINFO)
+CHECK_SYMBOL_EXISTS(GetNativeSystemInfo windows.h HAVE_GETNATIVESYSTEMINFO)
+
+configure_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/config.h.in
+  ${MGZ_UTILS_OUTPUT_TEMP_DIR}/config.h
+  )
+
+CHECK_FUNCTION_EXISTS(pthread_create HAVE_PTHREAD)
+CHECK_C_COMPILER_FLAG(-pthread C_HAS_PTHREAD)
+CHECK_CXX_COMPILER_FLAG(-pthread CXX_HAS_PTHREAD)
+
+if(C_HAS_PTHREAD)
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread")
+elseif(CXX_HAS_PTHREAD)
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread")
+elseif(HAVE_PTHREAD)
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lpthread")
+endif()
 
 # Documentation
 if(DOXYGEN_FOUND)

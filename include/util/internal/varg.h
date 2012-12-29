@@ -4,8 +4,8 @@
 #include <cstdio>
 #include <cstdarg>
 #include <cstdlib>
+#include "config.h"
 
-//#include "config.h"
 #ifndef HAVE_VASPRINTF
 #ifndef HAVE_VSNPRINTF
 #pragma error "vasprintf and vsnprintf not present..."

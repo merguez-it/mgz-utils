@@ -8,6 +8,7 @@
 namespace mgz {
   namespace util {
     std::string trim(const std::string &str);
+    std::string squeeze(const std::string & str);
     std::vector<std::string>& split(const std::string &s, char delim, std::vector<std::string> &elems);
     std::vector<std::string> split(const std::string &s, char delim);
     std::string join(const std::vector<std::string> &vector, char delim);
