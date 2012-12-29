@@ -4,23 +4,23 @@
 
 namespace mgz {
   namespace net {
-    URI::URI() {}
+    uri::uri() {}
 
-    URI::URI(const std::string & str) : uri_(str) {}
+    uri::uri(const std::string & str) : uri_(str) {}
 
-    URI URI::parse(const std::string & str) {
-      return URI(str).parse();
+    uri uri::parse(const std::string & str) {
+      return uri(str).parse();
     }
 
-    std::string URI::encode(const std::string & str) {
-      return URI(str).encode();
+    std::string uri::encode(const std::string & str) {
+      return uri(str).encode();
     }
 
-    std::string URI::decode(const std::string & str) {
-      return URI(str).decode();
+    std::string uri::decode(const std::string & str) {
+      return uri(str).decode();
     }
 
-    URI URI::parse() {
+    uri uri::parse() {
       std::pair<std::string, std::string> scheme_and_rest_ = mgz::util::cut(uri_, "://");
       scheme_ = scheme_and_rest_.first;
 
@@ -84,7 +84,7 @@ namespace mgz {
       /* F */ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0
     };
 
-    std::string URI::encode() const {
+    std::string uri::encode() const {
       const char DEC2HEX[16 + 1] = "0123456789ABCDEF";
       const unsigned char * pSrc = (const unsigned char *)uri_.c_str();
       const int SRC_LEN = uri_.length();
@@ -131,7 +131,7 @@ namespace mgz {
       /* F */ -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1
     };
 
-    std::string URI::decode() const {
+    std::string uri::decode() const {
       const unsigned char * pSrc = (const unsigned char *)uri_.c_str();
       const int SRC_LEN = uri_.length();
       const unsigned char * const SRC_END = pSrc + SRC_LEN;
@@ -163,35 +163,35 @@ namespace mgz {
       return sResult;
     }
 
-    const std::string URI::scheme() const {
+    const std::string uri::scheme() const {
       return scheme_;
     }
 
-    const std::string URI::host() const {
+    const std::string uri::host() const {
       return host_;
     }
 
-    const int URI::port() const {
+    const int uri::port() const {
       return port_;
     }
 
-    const std::string URI::path() const {
+    const std::string uri::path() const {
       return path_;
     }
 
-    const std::string URI::query_string() const {
+    const std::string uri::query_string() const {
       return query_string_;
     }
 
-    std::map<std::string, std::string> URI::query() const {
+    std::map<std::string, std::string> uri::query() const {
       return query_;
     }
 
-    const std::string URI::username() const {
+    const std::string uri::username() const {
       return username_;
     }
 
-    const std::string URI::password() const {
+    const std::string uri::password() const {
       return password_;
     }
   }

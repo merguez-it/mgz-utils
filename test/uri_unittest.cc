@@ -3,7 +3,7 @@
 #include "net/uri.h"
 
 TEST(URI, testSimple) {
-  mgz::net::URI u = mgz::net::URI::parse("http://merguez-it.com");
+  mgz::net::uri u = mgz::net::uri::parse("http://merguez-it.com");
 
   ASSERT_EQ("http", u.scheme());
   ASSERT_EQ("merguez-it.com", u.host());
@@ -11,7 +11,7 @@ TEST(URI, testSimple) {
 }
 
 TEST(URI, testFile) {
-  mgz::net::URI u = mgz::net::URI::parse("file:///toto.txt");
+  mgz::net::uri u = mgz::net::uri::parse("file:///toto.txt");
 
   ASSERT_EQ("file", u.scheme());
   ASSERT_EQ("", u.host());
@@ -20,7 +20,7 @@ TEST(URI, testFile) {
 }
 
 TEST(URI, testWithPort) {
-  mgz::net::URI u = mgz::net::URI::parse("http://merguez-it.com:80");
+  mgz::net::uri u = mgz::net::uri::parse("http://merguez-it.com:80");
 
   ASSERT_EQ("http", u.scheme());
   ASSERT_EQ("merguez-it.com", u.host());
@@ -28,7 +28,7 @@ TEST(URI, testWithPort) {
 }
 
 TEST(URI, testWithPath) {
-  mgz::net::URI u = mgz::net::URI::parse("http://merguez-it.com/path/to/data");
+  mgz::net::uri u = mgz::net::uri::parse("http://merguez-it.com/path/to/data");
 
   ASSERT_EQ("http", u.scheme());
   ASSERT_EQ("merguez-it.com", u.host());
@@ -37,7 +37,7 @@ TEST(URI, testWithPath) {
 }
 
 TEST(URI, testWithPortPath) {
-  mgz::net::URI u = mgz::net::URI::parse("http://merguez-it.com:80/path/to/data");
+  mgz::net::uri u = mgz::net::uri::parse("http://merguez-it.com:80/path/to/data");
 
   ASSERT_EQ("http", u.scheme());
   ASSERT_EQ("merguez-it.com", u.host());
@@ -46,7 +46,7 @@ TEST(URI, testWithPortPath) {
 }
 
 TEST(URI, testWithPortPathQuery) {
-  mgz::net::URI u = mgz::net::URI::parse("http://merguez-it.com:80/path/to/data?key1=value1&key2=value2");
+  mgz::net::uri u = mgz::net::uri::parse("http://merguez-it.com:80/path/to/data?key1=value1&key2=value2");
 
   ASSERT_EQ("http", u.scheme());
   ASSERT_EQ("merguez-it.com", u.host());
@@ -58,7 +58,7 @@ TEST(URI, testWithPortPathQuery) {
 }
 
 TEST(URI, testWithPortPathQueryAndUser) {
-  mgz::net::URI u = mgz::net::URI::parse("http://user:pass@merguez-it.com:80/path/to/data?key1=value1&key2=value2");
+  mgz::net::uri u = mgz::net::uri::parse("http://user:pass@merguez-it.com:80/path/to/data?key1=value1&key2=value2");
 
   ASSERT_EQ("http", u.scheme());
   ASSERT_EQ("merguez-it.com", u.host());
@@ -72,7 +72,7 @@ TEST(URI, testWithPortPathQueryAndUser) {
 }
 
 TEST(URI, testUserWithoutPassword) {
-  mgz::net::URI u = mgz::net::URI::parse("http://user@merguez-it.com");
+  mgz::net::uri u = mgz::net::uri::parse("http://user@merguez-it.com");
 
   ASSERT_EQ("http", u.scheme());
   ASSERT_EQ("merguez-it.com", u.host());
@@ -82,7 +82,7 @@ TEST(URI, testUserWithoutPassword) {
 }
 
 TEST(URI, testPasswordWithoutUser) {
-  mgz::net::URI u = mgz::net::URI::parse("http://:pass@merguez-it.com");
+  mgz::net::uri u = mgz::net::uri::parse("http://:pass@merguez-it.com");
 
   ASSERT_EQ("http", u.scheme());
   ASSERT_EQ("merguez-it.com", u.host());
@@ -92,7 +92,7 @@ TEST(URI, testPasswordWithoutUser) {
 }
 
 TEST(URI, testSinglePort) {
-  mgz::net::URI u = mgz::net::URI::parse("http://:8090");
+  mgz::net::uri u = mgz::net::uri::parse("http://:8090");
 
   ASSERT_EQ("http", u.scheme());
   ASSERT_EQ("", u.host());
@@ -104,22 +104,22 @@ TEST(URI, testSinglePort) {
 }
 
 TEST(URI, testEncodeDecode) {
-  ASSERT_TRUE(mgz::net::URI::encode("ABC") == "ABC");
+  ASSERT_TRUE(mgz::net::uri::encode("ABC") == "ABC");
 
   const std::string ORG("\0\1\2", 3);
   const std::string ENC("%00%01%02");
-  ASSERT_TRUE(mgz::net::URI::encode(ORG) == ENC);
-  ASSERT_TRUE(mgz::net::URI::decode(ENC) == ORG);
+  ASSERT_TRUE(mgz::net::uri::encode(ORG) == ENC);
+  ASSERT_TRUE(mgz::net::uri::decode(ENC) == ORG);
 
-  ASSERT_TRUE(mgz::net::URI::encode("\xFF") == "%FF");
-  ASSERT_TRUE(mgz::net::URI::decode("%FF") == "\xFF");
-  ASSERT_TRUE(mgz::net::URI::decode("%ff") == "\xFF");
+  ASSERT_TRUE(mgz::net::uri::encode("\xFF") == "%FF");
+  ASSERT_TRUE(mgz::net::uri::decode("%FF") == "\xFF");
+  ASSERT_TRUE(mgz::net::uri::decode("%ff") == "\xFF");
 
   // unsafe chars test, RFC1738
   const std::string UNSAFE(" <>#{}|\\^~[]`");
-  std::string sUnsafeEnc = mgz::net::URI::encode(UNSAFE);
+  std::string sUnsafeEnc = mgz::net::uri::encode(UNSAFE);
   ASSERT_TRUE(std::string::npos == sUnsafeEnc.find_first_of(UNSAFE));
-  ASSERT_TRUE(mgz::net::URI::decode(sUnsafeEnc) == UNSAFE);
+  ASSERT_TRUE(mgz::net::uri::decode(sUnsafeEnc) == UNSAFE);
 
   // random test
   const int MAX_LEN = 128;
@@ -131,7 +131,7 @@ TEST(URI, testEncodeDecode) {
     }
     int nLen = rand() % MAX_LEN;
     std::string sOrg(a, nLen);
-    std::string sEnc = mgz::net::URI::encode(sOrg);
-    ASSERT_TRUE(sOrg == mgz::net::URI::decode(sEnc));
+    std::string sEnc = mgz::net::uri::encode(sOrg);
+    ASSERT_TRUE(sOrg == mgz::net::uri::decode(sEnc));
   }
 }

@@ -25,4 +25,4 @@ namespace mgz {
   }
 }
 
-endif // __MGZ_UTIL_MAP_H
+#endif // __MGZ_UTIL_MAP_H

@@ -7,15 +7,15 @@
 
 namespace mgz {
   namespace net {
-    class URI {
+    class uri {
       public:
-        URI();
-        URI(const std::string & str);
-        static URI parse(const std::string & str);
+        uri();
+        uri(const std::string & str);
+        static uri parse(const std::string & str);
         static std::string encode(const std::string & str);
         static std::string decode(const std::string & str);
 
-        URI parse();
+        uri parse();
         std::string encode() const;
         std::string decode() const;
         const std::string scheme() const;
