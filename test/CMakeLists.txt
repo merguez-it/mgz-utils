@@ -27,6 +27,10 @@ add_executable(uri_unittest "uri_unittest.cc")
 target_link_libraries(uri_unittest ${TESTS_LIBS})
 add_test(URI_UNITTEST uri_unittest)
 
+add_executable(mime_unittest "mime_unittest.cc")
+target_link_libraries(mime_unittest ${TESTS_LIBS})
+add_test(MIME_UNITTEST mime_unittest)
+
 add_executable(datetime_unittest "datetime_unittest.cc")
 target_link_libraries(datetime_unittest ${TESTS_LIBS})
 add_test(DATETIME_UNITTEST datetime_unittest)
