@@ -135,7 +135,7 @@ namespace mgz {
     }
 
     std::ostream& operator<<(std::ostream& out, crc32sum crc32) {
-      return out << crc32.hexdigest();
+      return out << crc32.crc;
     }
 
     crc32_t crc32(const std::string & str) {

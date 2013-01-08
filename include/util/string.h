@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <utility>
+#include <istream>
 
 namespace mgz {
   namespace util {
@@ -52,6 +53,13 @@ namespace mgz {
       KEEP_NONE
     };
     std::pair<std::string, std::string> cut(const std::string &data, const std::string & sep, cut_keep keep = KEEP_NONE);
+
+    std::string red(const std::string & str);
+    std::string green(const std::string & str);
+    std::string yellow(const std::string & str);
+    std::string blue(const std::string & str);
+    std::string magenta(const std::string & str);
+    std::string cyan(const std::string & str);
   }
 }
 #endif // __MGZ_UTIL_STRING_H

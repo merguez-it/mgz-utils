@@ -425,5 +425,31 @@ namespace mgz {
 
       return std::make_pair(first_, second_);
     }
+
+#define ANSI_COLOR_RED     std::string("\x1b[31m")
+#define ANSI_COLOR_GREEN   std::string("\x1b[32m")
+#define ANSI_COLOR_YELLOW  std::string("\x1b[33m")
+#define ANSI_COLOR_BLUE    std::string("\x1b[34m")
+#define ANSI_COLOR_MAGENTA std::string("\x1b[35m")
+#define ANSI_COLOR_CYAN    std::string("\x1b[36m")
+#define ANSI_COLOR_RESET   std::string("\x1b[0m")
+    std::string red(const std::string & str) {
+      return ANSI_COLOR_RED + str + ANSI_COLOR_RESET;
+    }
+    std::string green(const std::string & str) {
+      return ANSI_COLOR_GREEN + str + ANSI_COLOR_RESET;
+    }
+    std::string yellow(const std::string & str) {
+      return ANSI_COLOR_YELLOW + str + ANSI_COLOR_RESET;
+    }
+    std::string blue(const std::string & str) {
+      return ANSI_COLOR_BLUE + str + ANSI_COLOR_RESET;
+    }
+    std::string magenta(const std::string & str) {
+      return ANSI_COLOR_MAGENTA + str + ANSI_COLOR_RESET;
+    }
+    std::string cyan(const std::string & str) {
+      return ANSI_COLOR_CYAN + str + ANSI_COLOR_RESET;
+    }
   }
 }
