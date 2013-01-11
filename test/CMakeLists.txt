@@ -71,3 +71,11 @@ add_executable(sha1_unittest "sha1_unittest.cc")
 target_link_libraries(sha1_unittest ${TESTS_LIBS})
 add_test(SHA1_UNITTEST sha1_unittest)
 
+add_executable(sha2_unittest "sha2_unittest.cc")
+target_link_libraries(sha2_unittest ${TESTS_LIBS})
+add_test(SHA2_UNITTEST sha2_unittest)
+
+add_executable(ripem_unittest "ripem_unittest.cc")
+target_link_libraries(ripem_unittest ${TESTS_LIBS})
+add_test(RIPEM_UNITTEST ripem_unittest)
+
