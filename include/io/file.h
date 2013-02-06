@@ -135,7 +135,7 @@ namespace mgz {
          * \return True if the file is defined
          */
         bool is_defined();
-      
+
         /*!
          * \brief Tests whether the file denoted by this abstract pathname has
          *        at least one permission for execution (and is not a directory).
@@ -234,14 +234,14 @@ namespace mgz {
          * \return The extension string
          */
         std::string get_extension();
-      
+
         /*!
          * \brief Returns the name of the file,without its last extension.
          * 
          * \return The name without extension
          */
         std::string get_name_without_extension();
-      
+
         /*!
          * \brief Returns the relative abstract pathname of this relative pathname from the given relative pathname.
          * 
@@ -336,7 +336,7 @@ namespace mgz {
          * \return the pathname string
          */
         std::string current_directory_path();
-        
+
         /*!
          * \brief Return the abstract pathname file of the current directory.
          * \return The abstract pathname
@@ -354,7 +354,7 @@ namespace mgz {
          * \return The name without version
          */
         std::string get_path_without_version();
-      
+
         /*!
          * \brief Tells if the abstract pathname represent a directory, whatever it exist or not on disk.
          * \return True if pathname is teminated by a FILE_SEARATOR
@@ -365,13 +365,13 @@ namespace mgz {
          * \brief Make a file executable on OS that require such flag (i.e: Mac, Linux, U*X...)
          */
         void set_executable_flag();
-      
+
         /*!
          * \brief Set (Unix) permissions to the file (no effect on directories).
          * \param perms : Unix permissions, like "0755" 
          */
-         void set_permissions(mode_t perms);
-      
+        void set_permissions(mode_t perms);
+
         /*!
          * \brief Compute the crc32 checksum of this file, if it exists and is not a directory
          * \return The crc32 checksum computed with the content of this file.
@@ -379,9 +379,9 @@ namespace mgz {
          * \throws FileShouldNotBeFolderException if the file represents an existing directory
          */
         crc32_t crc32();
-         
-         mode_t get_mode();
-         mode_t get_lmode();
+
+        mode_t get_mode();
+        mode_t get_lmode();
 
       private:
         std::string tilde_to_home(std::string path);

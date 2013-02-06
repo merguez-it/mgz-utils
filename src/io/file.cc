@@ -364,7 +364,7 @@ namespace mgz {
       if(pos == std::string::npos) {
         std::vector<std::string> path_cut = mgz::util::split(path, FILE_SEPARATOR_CHAR);
         std::vector<std::string> root_path_cut = mgz::util::split(root_path, FILE_SEPARATOR_CHAR);
-        
+
         int i = 0;
         int j;
         while(i < path_cut.size() && i < root_path_cut.size()) {
@@ -659,9 +659,9 @@ namespace mgz {
       }
 #endif
     }
-    
+
 #define HASH_BUFFER_SIZE ( 1024 * 2048 ) //2MB buffer
-    
+
     crc32_t file::crc32() {
       if (!exist()) {
         THROW(FileShouldExistException,"Cannot open the file %s as it does not exist",filepath_.c_str())
@@ -669,9 +669,9 @@ namespace mgz {
       if (is_directory()) {
         THROW(FileShouldNotBeFolderException, "Cannot compute the crc32 of %s as it is a folder",filepath_.c_str() );
       }
-            char * buffer = new char[HASH_BUFFER_SIZE];
+      char * buffer = new char[HASH_BUFFER_SIZE];
       security::crc32sum crc32;
-      
+
       std::ifstream file(get_path().c_str(), std::ios::in | std::ios::binary);
       while(file.good()) {
         memset(buffer, 0, HASH_BUFFER_SIZE);
@@ -680,9 +680,9 @@ namespace mgz {
         crc32.update(buffer, read_size);
       }
       crc32.finalize();
-      
+
       delete buffer;
-      
+
       return crc32.crc;
     }
 

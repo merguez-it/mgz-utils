@@ -14,8 +14,8 @@ include_directories(
   )
 
 set(TESTS_LIBS
-  mgz-security-s
   mgz-io-s
+  mgz-security-s
   mgz-regex-s
   mgz-net-s
   mgz-util-s
@@ -55,9 +55,11 @@ add_executable(file_unittest "file_unittest.cc")
 target_link_libraries(file_unittest ${TESTS_LIBS})
 add_test(FILE_UNITTEST file_unittest)
 
-add_executable(faststream_unittest "faststream_unittest.cc")
-target_link_libraries(faststream_unittest ${TESTS_LIBS})
-add_test(FASTSTREAM_UNITTEST faststream_unittest)
+if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+  add_executable(faststream_unittest "faststream_unittest.cc")
+  target_link_libraries(faststream_unittest ${TESTS_LIBS})
+  add_test(FASTSTREAM_UNITTEST faststream_unittest)
+endif()
 
 add_executable(crc32_unittest "crc32_unittest.cc")
 target_link_libraries(crc32_unittest ${TESTS_LIBS})
