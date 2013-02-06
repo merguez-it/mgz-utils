@@ -26,7 +26,7 @@
 #ifndef HAVE_STRPTIME
 
 /**
- * @file src/strptime.c
+ * @file util/internal/strptime.c
  * @brief This is a slightly modified version by the "R Project"
  * 				<http://www.r-project.org/> with locale support removed.
  *        Support for Windows locales added by Nils Durner for PlibC

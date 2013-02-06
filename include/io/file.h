@@ -2,7 +2,7 @@
 #define __MGZ_IO_FILE_H
 
 /*!
- * \file util/file.h
+ * \file io/file.h
  * \brief An abstract representation of file and directory pathnames.
  * \author Grégoire Lejeune
  * \version 0.1
@@ -45,12 +45,12 @@ class CantSetPermissionsException{};
 
 /*! \namespace mgz
  * 
- * Root namespace for all mgz specifics functions ans classes
+ * \brief Root namespace for all mgz specifics functions and classes
  */
 namespace mgz {
   /*! \namespace mgz::io
    *
-   * Namespace for mgz util tools
+   * \brief Namespace for mgz io tools
    */ 
   namespace io {
     /*! \class mgz::io::file
@@ -59,13 +59,28 @@ namespace mgz {
      */
     class file {
       public:
-        file(std::string);
+        /*!
+         * \brief Create a file with the given path
+         * \param path : Path of the file
+         */
+        file(std::string path);
+
+        /*!
+         * \brief Create a file with an empty path
+         */
         file();
 
+        /*!
+         * \brief This operator (<<), applied to an output stream, perform an output ot the file path
+         */
         friend std::ostream & operator<<(std::ostream & os, file & f) {
           return os << f.get_path();
         }
 
+        /*!
+         * \brief Compare two file
+         * \param file : The file object to compare to
+         */
         bool operator==(file);
 
         /*!
@@ -74,19 +89,31 @@ namespace mgz {
          * \return True if the file is a regular file
          */
         bool is_file();
+
         /*!
          * \brief Tests whether the file denoted by this abstract pathname is a directory
          * 
          * \return True if the file is a directory
          */
         bool is_directory();
+
         /*!
          * \brief Tests whether the file denoted by this abstract pathname is a symbolic link
          * 
          * \return True if the file is a symbolic link
          */
         bool is_symlink();
+
+        /*!
+         * \brief Test whether the path of the file is part of a symlink
+         * \return True if the path is part of a symlink
+         */
         bool is_under_symlink();
+
+        /*!
+         * \brief Test whether the path of the file is a broken symlink
+         * \return True is the path is a broken symlink
+         */
         bool is_broken_symlink();
 
         /*!
@@ -104,6 +131,10 @@ namespace mgz {
          */
         bool has_executable_flag();
 
+        /*!
+         * \brief Give the file size in bytes. If the file exist and is not a directory
+         * \return The file size in bytes or 0
+         */
         long size();
 
         /*!
@@ -137,6 +168,7 @@ namespace mgz {
          * \return The pathname string
          */
         std::string get_path();
+
         /*!
          * \brief Returns the name of the file or directory denoted by this abstract pathname.
          * 
@@ -158,7 +190,16 @@ namespace mgz {
          */
         file get_absolute_file();
 
+        /*!
+         * \brief Return the normalized pathname string of this abstract pathname
+         * \return The normalized path
+         */
         std::string get_normalize_path();
+
+        /*!
+         * \brief Create a new normalized pathname with the normalized path of the current abstract pathname, as path
+         * \return The abstract pathname of this abstract pathname with it normalized path
+         */
         file get_normalize_file();
 
         /*!
@@ -195,6 +236,12 @@ namespace mgz {
          * \return The relative pathname
          */
         file relative_file_from(file root);
+
+        /*!
+         * \brief Returns the relative abstract pathname of this relative pathname from the relative path
+         * \param root : A string path
+         * \return The relative pathname
+         */
         file relative_file_from(const std::string & root);
 
         /*!
@@ -204,6 +251,13 @@ namespace mgz {
          * \return The relative pathname string
          */
         std::string relative_path_from(file root);
+
+        /*!
+         * \brief Returns the relative pathname string of this relative pathname from the given relative pathname.
+         * 
+         * \param root : A string path
+         * \return The relative pathname string
+         */
         std::string relative_path_from(const std::string & root);
 
         /*!
@@ -243,8 +297,19 @@ namespace mgz {
          */
         bool copy(file);
 
-        bool relative_link(file);
-        bool absolute_link(file);
+        /*!
+         * \brief Create a relative link from the abstract pathname to the given abstract pathname
+         * \pathname source : The abstract pathname of the original copy
+         * \return True on success, false otherwise
+         */
+        bool relative_link(file source);
+
+        /*!
+         * \brief Create an absolute link from the abstract pathname to the given abstract pathname
+         * \pathname source : The abstract pathname of the original copy
+         * \return True on success, false otherwise
+         */
+        bool absolute_link(file source);
 
         /*!
          * \brief Move the file or directory denoted by this abstract pathname.

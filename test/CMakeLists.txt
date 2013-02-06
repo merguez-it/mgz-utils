@@ -14,11 +14,11 @@ include_directories(
   )
 
 set(TESTS_LIBS
-  mgz-util
-  mgz-net
-  mgz-regex
-  mgz-io
-  mgz-security
+  mgz-security-s
+  mgz-io-s
+  mgz-regex-s
+  mgz-net-s
+  mgz-util-s
   gtest
   gtest_main
   )

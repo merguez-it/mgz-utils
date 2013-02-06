@@ -1,3 +1,4 @@
+#include <string.h>
 #include "security/sha2.h"
 #include "util/string.h"
 
@@ -123,7 +124,7 @@ namespace mgz {
           length -= block_size;
         } else {
           unsigned int n = MIN(length, (block_size - curlen));
-          std::memcpy(buf + curlen, src, n);
+          memcpy(buf + curlen, src, n);
           curlen += n;
           src += n;
           length -= n;
@@ -263,7 +264,7 @@ namespace mgz {
           length -= block_size;
         } else {
           unsigned int n = MIN(length, (block_size - curlen));
-          std::memcpy(buf + curlen, src, n);
+          memcpy(buf + curlen, src, n);
           curlen += n;
           src += n;
           length -= n;

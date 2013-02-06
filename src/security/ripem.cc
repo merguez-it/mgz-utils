@@ -1,5 +1,5 @@
 // http://homes.esat.kuleuven.be/~bosselae/ripemd160.html
-
+#include <string.h>
 #include "security/ripem.h"
 #include "util/string.h"
 

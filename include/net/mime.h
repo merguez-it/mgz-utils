@@ -2,7 +2,7 @@
 #define __MGZ_NET_MIME_H
 
 /*!
- * \file mime.cc
+ * \file net/mime.h
  * \brief MIME/Type informations
  * \author Grégoire Lejeune
  * \version 0.1
@@ -18,12 +18,12 @@
 
 /*! \namespace mgz
  * 
- * Root namespace for all mgz specifics functions ans classes
+ * \brief Root namespace for all mgz specifics functions and classes
  */
 namespace mgz {
   /*! \namespace mgz::net
    *
-   * Namespace for mgz util tools
+   * \brief Namespace for mgz network tools
    */ 
   namespace net {
     enum mime_type_value {

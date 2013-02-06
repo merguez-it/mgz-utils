@@ -1,3 +1,4 @@
+#include <time.h>
 #include "gtest/gtest.h"
 
 #include "net/uri.h"
