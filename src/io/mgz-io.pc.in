@@ -7,4 +7,4 @@ Name: mkg-io
 Description: mgz-io base library
 Version:@MGZ_UTILS_VERSION@ 
 Cflags: -I${includedir}
-Libs: -L${libdir} -lmgz-util -lmgz-regex -lmgz-io
+Libs: -L${libdir} -lmgz-util -lmgz-regex -lmgz-security -lmgz-io
