@@ -1,6 +1,7 @@
 #include <map>
 #include <limits.h>
 #include "io/file.h"
+#include "util/exception.h"
 #include "gtest/gtest.h"
 #include "config-test.h"
 
@@ -551,3 +552,25 @@ TEST(FileUtil, TestNormalize) {
   ASSERT_FALSE(a.exist());
 #endif
 }
+
+TEST(FileUtil, Crc32ShouldWorkOnFile) {
+  mgz::io::file f(MGZ_TESTS_PATH(file/example.txt));
+  ASSERT_TRUE(f.exist());
+  crc32_t result = f.crc32();
+  EXPECT_EQ(0xf29ddc90,result);
+}
+
+TEST(FileUtil, Crc32ShouldFailOnNonExistingFile) {
+  mgz::io::file f(MGZ_TESTS_PATH(path/to/nowhere.txt));
+  ASSERT_FALSE(f.exist());
+  EXPECT_THROW(f.crc32(),Exception<FileShouldExistException>);
+}
+
+TEST(FileUtil, Crc32ShouldFailOnExistingFolder) {
+  mgz::io::file f(MGZ_TESTS_PATH(file));
+  ASSERT_TRUE(f.exist());
+  ASSERT_TRUE(f.is_directory());
+  EXPECT_THROW(f.crc32(),Exception<FileShouldNotBeFolderException>);
+}
+
+

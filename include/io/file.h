@@ -5,6 +5,7 @@
  * \file io/file.h
  * \brief An abstract representation of file and directory pathnames.
  * \author Grégoire Lejeune
+ * \author Mathias Franck
  * \version 0.1
  * \date mars 2012
  */
@@ -13,7 +14,7 @@
 #include <vector>
 #include <sys/types.h>
 #include <sys/stat.h>
-
+#include "security/crc32.h"
 #ifdef __WIN32__
 #include <direct.h>
 
@@ -42,6 +43,18 @@
 
 class CantReadFileStatusException{};
 class CantSetPermissionsException{};
+
+/*! \class FileShouldExistException
+ *
+ * Exception thrown when attempting to access a non existing for reading.
+ */
+class FileShouldExistException{};
+
+/*! \class FileShouldNotBeFolderException
+ *
+ * Exception thrown when attempting to operate on an mgz::io::file that is not supposed to be a folder.
+ */
+class FileShouldNotBeFolderException{};
 
 /*! \namespace mgz
  * 
@@ -359,6 +372,14 @@ namespace mgz {
          */
          void set_permissions(mode_t perms);
       
+        /*!
+         * \brief Compute the crc32 checksum of this file, if it exists and is not a directory
+         * \return The crc32 checksum computed with the content of this file.
+         * \throws FileShouldExistException if the file does not exist.
+         * \throws FileShouldNotBeFolderException if the file represents an existing directory
+         */
+        crc32_t crc32();
+         
          mode_t get_mode();
          mode_t get_lmode();
 
