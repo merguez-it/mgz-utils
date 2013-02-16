@@ -28,7 +28,7 @@ Install [cmake](http://www.cmake.org/cmake/help/install.html), [doxygen](http://
     cd <path to lhs root>
     mkdir build
     cd build
-    cmake ..
+    cmake [-DCMAKE_INSTALL_PREFIX:PATH=/<path>] .. 
     make
     make test
     make doc

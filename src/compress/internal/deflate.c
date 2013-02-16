@@ -686,7 +686,7 @@ static State *alloc_state(void) {
 
 /* extern */
 
-int deflate(flat_stream *stream) {
+int mgz_deflate(mgz_stream *stream) {
 	State *s = (State*)(stream->state);
 	int n, k;
 

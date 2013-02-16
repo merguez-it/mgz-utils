@@ -3,7 +3,7 @@ exec_prefix=${prefix}
 includedir=${prefix}/include
 libdir=${exec_prefix}/lib
 
-Name: mkg-compress
+Name: mgz-compress
 Description: mgz-compress base library
 Version:@MGZ_UTILS_VERSION@ 
 Cflags: -I${includedir}

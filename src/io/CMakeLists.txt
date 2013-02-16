@@ -3,11 +3,12 @@ include_directories(${MGZ_UTILS_SOURCE_DIR}/include)
 
 set(MGZ_IO_SOURCES
   file.cc
+  properties.cc
   faststream.cc
   stream.cc
   )
 add_library(mgz-io SHARED ${MGZ_IO_SOURCES})
-target_link_libraries(mgz-io mgz-util mgz-regex mgz-security)
+target_link_libraries(mgz-io mgz-util mgz-regex mgz-security mgz-xml)
 
 add_library(mgz-io-s STATIC ${MGZ_IO_SOURCES})
 
@@ -19,6 +20,7 @@ configure_file(
 set(MGZ_IO_HEADERS 
   ${MGZ_UTILS_SOURCE_DIR}/include/io/faststream.h
   ${MGZ_UTILS_SOURCE_DIR}/include/io/file.h
+  ${MGZ_UTILS_SOURCE_DIR}/include/io/properties.h
   ${MGZ_UTILS_SOURCE_DIR}/include/io/stream.h
   )
 

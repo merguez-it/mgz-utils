@@ -3,8 +3,8 @@ exec_prefix=${prefix}
 includedir=${prefix}/include
 libdir=${exec_prefix}/lib
 
-Name: mkg-io
+Name: mgz-io
 Description: mgz-io base library
 Version:@MGZ_UTILS_VERSION@ 
 Cflags: -I${includedir}
-Libs: -L${libdir} -lmgz-util -lmgz-regex -lmgz-security -lmgz-io
+Libs: -L${libdir} -lmgz-util -lmgz-regex -lmgz-security -lmgz-xml -lmgz-io

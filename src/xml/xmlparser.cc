@@ -394,7 +394,7 @@ namespace mgz {
       return false;
     }
 
-    // One of GlowXML's more performance demanding functions. Try to keep the memory overhead down. The
+    // One of mgz::xml's more performance demanding functions. Try to keep the memory overhead down. The
     // "assign" optimization removes over 10% of the execution time.
     //
     const char* base::ReadName( const char* p, MGZXML_STRING * name, encoding xml_encoding )
@@ -1341,7 +1341,7 @@ namespace mgz {
       }
       p += strlen( startTag );
 
-      // [ 1475201 ] GlowXML parses entities in comments
+      // [ 1475201 ] mgz::xml parses entities in comments
       // Oops - ReadText doesn't work, because we don't want to parse the entities.
       // p = ReadText( p, &value, false, endTag, false, xml_encoding );
       //

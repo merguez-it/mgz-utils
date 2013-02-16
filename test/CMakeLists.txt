@@ -14,8 +14,10 @@ include_directories(
   )
 
 set(TESTS_LIBS
+  mgz-compress-s
   mgz-io-s
   mgz-security-s
+  mgz-xml-s
   mgz-regex-s
   mgz-net-s
   mgz-util-s
@@ -55,6 +57,10 @@ add_executable(file_unittest "file_unittest.cc")
 target_link_libraries(file_unittest ${TESTS_LIBS})
 add_test(FILE_UNITTEST file_unittest)
 
+add_executable(properties_unittest "properties_unittest.cc")
+target_link_libraries(properties_unittest ${TESTS_LIBS})
+add_test(PROPERTIES_UNITTEST properties_unittest)
+
 if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Windows")
   add_executable(faststream_unittest "faststream_unittest.cc")
   target_link_libraries(faststream_unittest ${TESTS_LIBS})
@@ -80,4 +86,8 @@ add_test(SHA2_UNITTEST sha2_unittest)
 add_executable(ripem_unittest "ripem_unittest.cc")
 target_link_libraries(ripem_unittest ${TESTS_LIBS})
 add_test(RIPEM_UNITTEST ripem_unittest)
+
+add_executable(compress_unittest "compress_unittest.cc")
+target_link_libraries(compress_unittest ${TESTS_LIBS})
+add_test(COMPRESS_UNITTEST compress_unittest)
 

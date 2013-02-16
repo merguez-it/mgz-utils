@@ -16,6 +16,7 @@ configure_file(
   )
 set(MGZ_COMPRESS_HEADERS 
   ${MGZ_UTILS_SOURCE_DIR}/include/compress/z.h
+  ${MGZ_UTILS_SOURCE_DIR}/include/compress/mgz_stream.h
   )
 install(FILES ${MGZ_COMPRESS_HEADERS} DESTINATION include/compress)
 install(TARGETS mgz-compress mgz-compress-s

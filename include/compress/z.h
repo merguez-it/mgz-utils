@@ -3,6 +3,10 @@
 
 #include <string>
 #include <vector>
+#include <fstream>
+
+#include "compress/mgz_stream.h"
+#define BUFFER_SIZE 1<<15
 
 namespace mgz {
   namespace compress {
@@ -18,8 +22,26 @@ namespace mgz {
       public:
         Z(CompressionType type);
 
-        std::vector<unsigned char> compress(std::vector<unsigned char> data);
-        std::vector<unsigned char> uncompress(std::vector<unsigned char> data);
+        // compress
+        int deflate_init(int level = 9);
+        int deflate();
+        int deflate_end();
+
+        void deflate(const std::vector<unsigned char> & in, std::vector<unsigned char> & out);
+        void deflate(FILE *in, FILE *out);
+        void deflate(std::fstream & in, std::fstream & out);
+
+        // uncompress
+        int inflate_init();
+        int inflate();
+        int inflate_end();
+
+        void inflate(const std::vector<unsigned char> & in, std::vector<unsigned char> & out);
+        void inflate(FILE *in, FILE *out);
+        void inflate(std::fstream & in, std::fstream & out);
+
+      public:
+        mgz_stream stream;
 
       private:
         unsigned int adler32(unsigned char *p, int n, unsigned int adler);
@@ -50,23 +72,21 @@ namespace mgz {
         int dummyfooter(unsigned char *p, int n, unsigned int sum, unsigned int len, unsigned int zlen);
         unsigned int dummysum(unsigned char *p, int n, unsigned int sum);
 
-        int compress_stream(FILE *in, FILE *out);
-        std::vector<unsigned char> compress_vector(std::vector<unsigned char> data);
-
-        int decompress_stream(FILE *in, FILE *out);
-        std::vector<unsigned char> decompress_vector(std::vector<unsigned char> data);
-
       private:
         CompressionType type_;
-        unsigned int crc_table_[256];
 
-        char *last_error_;
+        unsigned int crc_table_[256];
+        int last_flat_rcod_;
+
         unsigned int checksum_;
         unsigned int nin_;
         unsigned int nout_;
         unsigned int header_size_;
         unsigned int footer_size_;
         unsigned int extra_size_;
+
+        bool deflate_init_done_;
+        bool inflate_init_done_;
     };
   }
 }

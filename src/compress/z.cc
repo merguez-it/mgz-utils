@@ -367,321 +367,15 @@ namespace mgz {
       return 0;
     }
 
-    // Common part ----------------------------------------------------------------
-
-#define BUFFER_SIZE 1<<15
-
-    std::vector<unsigned char> Z::compress_vector(std::vector<unsigned char> data) {
-      std::vector<unsigned char> out = std::vector<unsigned char>();
-      // TODO
-      return out;
-    }
-
-    /* compress, using flat_stream interface */
-    int Z::compress_stream(FILE *in, FILE *out) {
-      flat_stream s;
-      int k, n;
-
-      s.next_in = (unsigned char*)malloc(BUFFER_SIZE);
-      s.next_out = (unsigned char*)malloc(BUFFER_SIZE);
-      s.avail_in = 0;
-      s.avail_out = BUFFER_SIZE;
-      s.err = 0;
-      s.state = 0;
-
-      switch(type_) {
-        case GZIP:
-          k = deflate_gzip_header(s.next_out, s.avail_out);
-          break;
-        case ZLIB:
-          k = deflate_zlib_header(s.next_out, s.avail_out);
-          break;
-        case PKZIP:
-          k = deflate_pkzip_header(s.next_out, s.avail_out);
-          break;
-        default:
-          k = dummyheader(s.next_out, s.avail_out);
-      }
-      if (k == FLATE_ERR) {
-        s.err = strdup("header error.");
-        n = FLATE_ERR;
-      } else {
-        header_size_ = s.avail_out = k;
-        n = FLATE_OUT;
-      }
-      for (;; n = deflate(&s)) {
-        switch (n) {
-          case FLATE_OK:
-            switch(type_) {
-              case GZIP:
-                k = deflate_gzip_footer(s.next_out, s.avail_out, checksum_, nin_, nout_ - header_size_);
-                break;
-              case ZLIB:
-                k = deflate_zlib_footer(s.next_out, s.avail_out, checksum_, nin_, nout_ - header_size_);
-                break;
-              case PKZIP:
-                k = deflate_pkzip_footer(s.next_out, s.avail_out, checksum_, nin_, nout_ - header_size_);
-                break;
-              default:
-                k = dummyfooter(s.next_out, s.avail_out, checksum_, nin_, nout_ - header_size_);
-            }
-            if (k == FLATE_ERR) {
-              s.err = strdup("footer error.");
-              n = FLATE_ERR;
-            } else if (k != fwrite(s.next_out, 1, k, out)) {
-              s.err = strdup("write error.");
-              n = FLATE_ERR;
-            } else {
-              footer_size_ = k;
-              nout_ += k;
-            }
-          case FLATE_ERR:
-            free(s.next_in);
-            free(s.next_out);
-            last_error_ = s.err;
-            return n;
-          case FLATE_IN:
-            s.avail_in = fread(s.next_in, 1, BUFFER_SIZE, in);
-            nin_ += s.avail_in;
-            switch(type_) {
-              case GZIP:
-                checksum_ = crc32(s.next_in, s.avail_in, checksum_);
-                break;
-              case ZLIB:
-                checksum_ = adler32(s.next_in, s.avail_in, checksum_);
-                break;
-              case PKZIP:
-                checksum_ = crc32(s.next_in, s.avail_in, checksum_);
-                break;
-              default:
-                checksum_ = dummysum(s.next_in, s.avail_in, checksum_);
-            }
-            break;
-          case FLATE_OUT:
-            k = fwrite(s.next_out, 1, s.avail_out, out);
-            if (k != s.avail_out)
-              s.err = strdup("write error.");
-            nout_ += k;
-            s.avail_out = BUFFER_SIZE;
-            break;
-        }
-      }
-    }
-
-    std::vector<unsigned char> Z::decompress_vector(std::vector<unsigned char> data) {
-      std::vector<unsigned char> out = std::vector<unsigned char>();
-      flat_stream s;
-      unsigned char *begin;
-      int k, n;
-
-      s.next_in = begin = reinterpret_cast<unsigned char*>(&data[0]);
-      s.avail_in = data.size();
-      s.next_out = (unsigned char*)malloc(BUFFER_SIZE);
-      s.avail_out = BUFFER_SIZE;
-      s.err = 0;
-      s.state = 0;
-      nin_ += s.avail_in;
-
-      switch(type_) {
-        case GZIP:
-          k = inflate_gzip_header(s.next_in, s.avail_in);
-          break;
-        case ZLIB:
-          k = inflate_zlib_header(s.next_in, s.avail_in);
-          break;
-        case PKZIP:
-          k = inflate_pkzip_header(s.next_in, s.avail_in);
-          break;
-        default:
-          k = dummyheader(s.next_in, s.avail_in);
-      }
-      if (k == FLATE_ERR) {
-        s.err = strdup("header error.");
-        n = FLATE_ERR;
-      } else {
-        header_size_ = k;
-        s.avail_in -= k;
-        s.next_in += k;
-        n = inflate(&s);
-      }
-      for (;; n = inflate(&s)) {
-        switch (n) {
-          case FLATE_OK:
-            memmove(begin, s.next_in, s.avail_in);
-            k = 0; 
-            nin_ += k;
-            s.avail_in += k;
-            switch(type_) {
-              case GZIP:
-                k = inflate_gzip_footer(begin, s.avail_in, checksum_, nout_, nin_ - s.avail_in - header_size_);
-                break;
-              case ZLIB:
-                k = inflate_zlib_footer(begin, s.avail_in, checksum_, nout_, nin_ - s.avail_in - header_size_);
-                break;
-              case PKZIP:
-                k = inflate_pkzip_footer(begin, s.avail_in, checksum_, nout_, nin_ - s.avail_in - header_size_);
-                break;
-              default:
-                k = dummyfooter(begin, s.avail_in, checksum_, nout_, nin_ - s.avail_in - header_size_);
-            }
-            if (k == FLATE_ERR) {
-              s.err = strdup("footer error.");
-              n = FLATE_ERR;
-              throw 2;
-            } else {
-              footer_size_ = k;
-              extra_size_ = s.avail_in - k;
-            }
-            free(s.next_out);
-            return out;
-          case FLATE_ERR:
-            throw 3;
-          case FLATE_IN:
-            throw 1;
-          case FLATE_OUT:
-            out.insert(out.end(), s.next_out, s.next_out+s.avail_out);
-            k = s.avail_out;
-            switch(type_) {
-              case GZIP:
-                checksum_ = crc32(s.next_out, k, checksum_);
-                break;
-              case ZLIB:
-                checksum_ = adler32(s.next_out, k, checksum_);
-                break;
-              case PKZIP:
-                checksum_ = crc32(s.next_out, k, checksum_);
-                break;
-              default:
-                checksum_ = dummysum(s.next_out, k, checksum_);
-            }
-            nout_ += k;
-            s.avail_out = BUFFER_SIZE;
-            break;
-        }
-      }
-
-    }
-
-    /* decompress, using flat_stream interface */
-    int Z::decompress_stream(FILE *in, FILE *out) {
-      flat_stream s;
-      unsigned char *begin;
-      int k, n;
-
-      s.next_in = begin = (unsigned char*)malloc(BUFFER_SIZE);
-      s.next_out = (unsigned char*)malloc(BUFFER_SIZE);
-      s.avail_out = BUFFER_SIZE;
-      s.err = 0;
-      s.state = 0;
-
-      s.avail_in = fread(s.next_in, 1, BUFFER_SIZE, in);
-      nin_ += s.avail_in;
-      switch(type_) {
-        case GZIP:
-          k = inflate_gzip_header(s.next_in, s.avail_in);
-          break;
-        case ZLIB:
-          k = inflate_zlib_header(s.next_in, s.avail_in);
-          break;
-        case PKZIP:
-          k = inflate_pkzip_header(s.next_in, s.avail_in);
-          break;
-        default:
-          k = dummyheader(s.next_in, s.avail_in);
-      }
-      if (k == FLATE_ERR) {
-        s.err = strdup("header error.");
-        n = FLATE_ERR;
-      } else {
-        header_size_ = k;
-        s.avail_in -= k;
-        s.next_in += k;
-        n = inflate(&s);
-      }
-      for (;; n = inflate(&s)) {
-        switch (n) {
-          case FLATE_OK:
-            memmove(begin, s.next_in, s.avail_in);
-            k = fread(begin, 1, BUFFER_SIZE-s.avail_in, in);
-            nin_ += k;
-            s.avail_in += k;
-            switch(type_) {
-              case GZIP:
-                k = inflate_gzip_footer(begin, s.avail_in, checksum_, nout_, nin_ - s.avail_in - header_size_);
-                break;
-              case ZLIB:
-                k = inflate_zlib_footer(begin, s.avail_in, checksum_, nout_, nin_ - s.avail_in - header_size_);
-                break;
-              case PKZIP:
-                k = inflate_pkzip_footer(begin, s.avail_in, checksum_, nout_, nin_ - s.avail_in - header_size_);
-                break;
-              default:
-                k = dummyfooter(begin, s.avail_in, checksum_, nout_, nin_ - s.avail_in - header_size_);
-            }
-            if (k == FLATE_ERR) {
-              s.err = strdup("footer error.");
-              n = FLATE_ERR;
-            } else {
-              footer_size_ = k;
-              extra_size_ = s.avail_in - k;
-            }
-          case FLATE_ERR:
-            free(begin);
-            free(s.next_out);
-            last_error_ = s.err;
-            return n;
-          case FLATE_IN:
-            s.next_in = begin;
-            s.avail_in = fread(s.next_in, 1, BUFFER_SIZE, in);
-            nin_ += s.avail_in;
-            break;
-          case FLATE_OUT:
-            k = fwrite(s.next_out, 1, s.avail_out, out);
-            if (k != s.avail_out)
-              s.err = strdup("write error.");
-            switch(type_) {
-              case GZIP:
-                checksum_ = crc32(s.next_out, k, checksum_);
-                break;
-              case ZLIB:
-                checksum_ = adler32(s.next_out, k, checksum_);
-                break;
-              case PKZIP:
-                checksum_ = crc32(s.next_out, k, checksum_);
-                break;
-              default:
-                checksum_ = dummysum(s.next_out, k, checksum_);
-            }
-            nout_ += k;
-            s.avail_out = BUFFER_SIZE;
-            break;
-        }
-      }
-    }
-
     // Public part ----------------------------------------------------------------
 
-    Z::Z(CompressionType type) : type_(type) { }
+    Z::Z(CompressionType type) : type_(type), deflate_init_done_(false), inflate_init_done_(false) { }
 
-    std::vector<unsigned char> Z::compress(std::vector<unsigned char> data) {
-      checksum_ = 0;
-      nin_ = 0;
-      nout_ = 0;
-      header_size_ = 0;
-      footer_size_ = 0;
-      extra_size_ = 0;
-      if(GZIP == type_ || PKZIP == type_) {
-        crc32init();
-      }
-      if(FLATE_OK != compress_stream(stdin, stdout)) {
-        std::cout << last_error_ << std::endl;
-      }
+    // compress -------------------------------------------------------------------
 
-      std::vector<unsigned char> out;
-      return out;
-    }
+    int Z::deflate_init(int /* FIXME : unused */ level) {
+      int rcod;
 
-    std::vector<unsigned char> Z::uncompress(std::vector<unsigned char> data) {
       checksum_ = 0;
       nin_ = 0;
       nout_ = 0;
@@ -692,8 +386,474 @@ namespace mgz {
         crc32init();
       }
 
-      return decompress_vector(data);
+      stream.next_in = (unsigned char*)malloc(BUFFER_SIZE);
+      memset(stream.next_in, 0, BUFFER_SIZE);
+      stream.next_out = (unsigned char*)malloc(BUFFER_SIZE);
+      memset(stream.next_out, 0, BUFFER_SIZE);
+      stream.avail_in = 0;
+      stream.avail_out = BUFFER_SIZE;
+      stream.err = 0;
+      stream.state = 0;
+
+      switch(type_) {
+        case GZIP:
+          rcod = deflate_gzip_header(stream.next_out, stream.avail_out);
+          break;
+        case ZLIB:
+          rcod = deflate_zlib_header(stream.next_out, stream.avail_out);
+          break;
+        case PKZIP:
+          rcod = deflate_pkzip_header(stream.next_out, stream.avail_out);
+          break;
+        default:
+          rcod = dummyheader(stream.next_out, stream.avail_out);
+      }
+      if (rcod == FLATE_ERR) {
+        free(stream.next_in);
+        free(stream.next_out);
+        stream.err = strdup("header error.");
+        last_flat_rcod_ = FLATE_ERR;
+      } else {
+        header_size_ = stream.avail_out = rcod;
+        last_flat_rcod_ = FLATE_OUT;
+      }
+
+      return last_flat_rcod_;
     }
 
+    int Z::deflate() {
+      switch(last_flat_rcod_) {
+        case FLATE_IN:
+          nin_ += stream.avail_in;
+          switch(type_) {
+            case GZIP:
+              checksum_ = crc32(stream.next_in, stream.avail_in, checksum_);
+              break;
+            case ZLIB:
+              checksum_ = adler32(stream.next_in, stream.avail_in, checksum_);
+              break;
+            case PKZIP:
+              checksum_ = crc32(stream.next_in, stream.avail_in, checksum_);
+              break;
+            default:
+              checksum_ = dummysum(stream.next_in, stream.avail_in, checksum_);
+          }
+          break;
+        case FLATE_OUT:
+          nout_ += stream.avail_out;
+          stream.avail_out = BUFFER_SIZE;
+          break;
+        default:
+          break;
+      }
+      last_flat_rcod_ = ::mgz_deflate(&stream);
+      return last_flat_rcod_;
+    }
+
+    int Z::deflate_end() {
+      int rcod;
+
+      if(NULL == stream.next_in || NULL == stream.next_out) {
+        stream.err = strdup("footer error.");
+        last_flat_rcod_ = FLATE_ERR;
+      } else {
+        switch(type_) {
+          case GZIP:
+            rcod = deflate_gzip_footer(stream.next_out, stream.avail_out, checksum_, nin_, nout_ - header_size_);
+            break;
+          case ZLIB:
+            rcod = deflate_zlib_footer(stream.next_out, stream.avail_out, checksum_, nin_, nout_ - header_size_);
+            break;
+          case PKZIP:
+            rcod = deflate_pkzip_footer(stream.next_out, stream.avail_out, checksum_, nin_, nout_ - header_size_);
+            break;
+          default:
+            rcod = dummyfooter(stream.next_out, stream.avail_out, checksum_, nin_, nout_ - header_size_);
+        }
+        if (rcod == FLATE_ERR) {
+          free(stream.next_in);
+          free(stream.next_out);
+          stream.err = strdup("footer error.");
+          last_flat_rcod_ = FLATE_ERR;
+        } else {
+          stream.avail_out = rcod;
+          footer_size_ = rcod;
+          nout_ += rcod;
+          last_flat_rcod_ = FLATE_END;
+        }
+      }
+
+      return last_flat_rcod_;
+    }
+
+    void Z::deflate(const std::vector<unsigned char> & in, std::vector<unsigned char> & out) {
+      int rcod;
+      const unsigned char *data = reinterpret_cast<const unsigned char*>(&in[0]);
+      int data_size = in.size();
+
+      if(!deflate_init_done_) {
+        rcod = deflate_init(9);
+        deflate_init_done_ = true;
+      } else {
+        if(data_size == 0) {
+          while(last_flat_rcod_ != FLATE_OK) {
+            switch(last_flat_rcod_) {
+              case FLATE_IN:
+                stream.avail_in = 0;
+                break;
+              case FLATE_OUT:
+                out.insert(out.end(), stream.next_out, stream.next_out+stream.avail_out);
+                break;
+              case FLATE_ERR:
+              case FLATE_END:
+                throw 2; // FIXME
+                break;
+              case FLATE_OK:
+              default:
+                break;
+            }
+            deflate();
+          }
+
+          rcod = deflate_end();
+          if(FLATE_END == rcod) {
+            out.insert(out.end(), stream.next_out, stream.next_out+stream.avail_out);
+            deflate_init_done_ = false;
+          } else {
+            throw 1; // FIXME
+          }
+
+          return;
+        } else {
+          rcod = last_flat_rcod_;
+        }
+      }
+
+      for(;;rcod = deflate()) {
+        switch(rcod) {
+          case FLATE_OUT:
+            out.insert(out.end(), stream.next_out, stream.next_out+stream.avail_out);
+            break;
+          case FLATE_IN:
+            if(data_size <= 0) {
+              stream.avail_in = 0;
+              return;
+            }
+            if(data_size < BUFFER_SIZE) {
+              memcpy(stream.next_in, data, data_size);
+              stream.avail_in = data_size;
+              data_size = 0;
+            } else {
+              memcpy(stream.next_in, data, BUFFER_SIZE);
+              stream.avail_in = BUFFER_SIZE;
+              data_size -= BUFFER_SIZE;
+              data += BUFFER_SIZE;
+            }
+            break;
+          case FLATE_OK:
+          case FLATE_END:
+            return;
+            break;
+          case FLATE_ERR:
+            throw 2; // FIXME
+        }
+      }
+    }
+
+    void Z::deflate(FILE *in, FILE *out) {
+      unsigned char* buffer = (unsigned char*)malloc(BUFFER_SIZE);
+
+      std::vector<unsigned char> vec_in;
+      std::vector<unsigned char> vec_out;
+
+      bool cont = true;
+      while(cont) {
+        if(int in_size = fread(buffer, 1, BUFFER_SIZE, in)) {
+          vec_in = std::vector<unsigned char>(buffer, buffer+in_size);
+        } else {
+          cont = false;
+        }
+        deflate(vec_in, vec_out);
+        if(vec_out.size() > 0) {
+          if(vec_out.size() != fwrite(&vec_out.front(), 1, vec_out.size(), out)) {
+            throw 1; // FIXME
+          }
+        }
+        vec_out.clear();
+        vec_in.clear();
+      }
+
+      free(buffer);
+    }
+    
+    void Z::deflate(std::fstream & in, std::fstream & out) {
+      unsigned char* buffer = (unsigned char*)malloc(BUFFER_SIZE);
+
+      std::vector<unsigned char> vec_in;
+      std::vector<unsigned char> vec_out;
+
+      bool cont = true;
+      while(cont) {
+        in.read((char*)buffer, BUFFER_SIZE);
+        if(int in_size = in.gcount()) {
+          vec_in = std::vector<unsigned char>(buffer, buffer+in_size);
+        } else {
+          cont = false;
+        }
+        deflate(vec_in, vec_out);
+        if(vec_out.size() > 0) {
+          out.write((const char*)&vec_out.front(), vec_out.size());
+        }
+        vec_out.clear();
+        vec_in.clear();
+      }
+
+      free(buffer);
+    }
+
+    // uncompress -------------------------------------------------------------
+
+    int Z::inflate_init() {
+      checksum_ = 0;
+      nin_ = 0;
+      nout_ = 0;
+      header_size_ = 0;
+      footer_size_ = 0;
+      extra_size_ = 0;
+      if(GZIP == type_ || PKZIP == type_) {
+        crc32init();
+      }
+
+      stream.next_in = stream.begin = (unsigned char*)malloc(BUFFER_SIZE);
+      memset(stream.next_in, 0, BUFFER_SIZE);
+      stream.next_out = (unsigned char*)malloc(BUFFER_SIZE);
+      memset(stream.next_out, 0, BUFFER_SIZE);
+      stream.avail_in = 0;
+      stream.avail_out = BUFFER_SIZE;
+      stream.err = 0;
+      stream.state = 0;
+      stream.inflate_header_read = 0;
+
+      last_flat_rcod_ = FLATE_IN;
+      return last_flat_rcod_;
+    }
+
+    int Z::inflate() {
+      int k;
+      switch(last_flat_rcod_) {
+        case FLATE_IN:
+          nin_ += stream.avail_in;
+
+          if(0 == stream.inflate_header_read) {
+            switch(type_) {
+              case GZIP:
+                k = inflate_gzip_header(stream.next_in, stream.avail_in);
+                break;
+              case ZLIB:
+                k = inflate_zlib_header(stream.next_in, stream.avail_in);
+                break;
+              case PKZIP:
+                k = inflate_pkzip_header(stream.next_in, stream.avail_in);
+                break;
+              default:
+                k = dummyheader(stream.next_in, stream.avail_in);
+            }
+
+            if (k == FLATE_ERR) {
+              stream.err = strdup("header error.");
+              last_flat_rcod_ = FLATE_ERR;
+              return last_flat_rcod_;
+            } else {
+              header_size_ = k;
+              stream.avail_in -= k;
+              stream.next_in += k;
+              stream.inflate_header_read = 1;
+            }
+          }
+          break;
+        case FLATE_OUT:
+          switch(type_) {
+            case GZIP:
+              checksum_ = crc32(stream.next_out, stream.avail_out, checksum_);
+              break;
+            case ZLIB:
+              checksum_ = adler32(stream.next_out, stream.avail_out, checksum_);
+              break;
+            case PKZIP:
+              checksum_ = crc32(stream.next_out, stream.avail_out, checksum_);
+              break;
+            default:
+              checksum_ = dummysum(stream.next_out, stream.avail_out, checksum_);
+          }
+          nout_ += stream.avail_out;
+          stream.avail_out = BUFFER_SIZE;
+          break;
+        default:
+          break;
+      }
+
+      last_flat_rcod_ = ::mgz_inflate(&stream);
+
+      switch(last_flat_rcod_) {
+        case FLATE_IN:
+          stream.next_in = stream.begin;
+          break;
+        case FLATE_OK:
+            memmove(stream.begin, stream.next_in, stream.avail_in);
+            break;
+        default:
+          break;
+      }
+
+      return last_flat_rcod_;
+    }
+
+    int Z::inflate_end() {
+      int k;
+      switch(type_) {
+        case GZIP:
+          k = inflate_gzip_footer(stream.begin, stream.avail_in, checksum_, nout_, nin_ - stream.avail_in - header_size_);
+          break;
+        case ZLIB:
+          k = inflate_zlib_footer(stream.begin, stream.avail_in, checksum_, nout_, nin_ - stream.avail_in - header_size_);
+          break;
+        case PKZIP:
+          k = inflate_pkzip_footer(stream.begin, stream.avail_in, checksum_, nout_, nin_ - stream.avail_in - header_size_);
+          break;
+        default:
+          k = dummyfooter(stream.begin, stream.avail_in, checksum_, nout_, nin_ - stream.avail_in - header_size_);
+      }
+      if (k == FLATE_ERR) {
+        stream.err = strdup("footer error.");
+        last_flat_rcod_ = FLATE_ERR;
+      } else {
+        footer_size_ = k;
+        extra_size_ = stream.avail_in - k;
+        last_flat_rcod_ = FLATE_END;
+      }
+      return last_flat_rcod_;
+    }
+
+    void Z::inflate(const std::vector<unsigned char> & in, std::vector<unsigned char> & out) {
+      int rcod;
+      const unsigned char *data = reinterpret_cast<const unsigned char*>(&in[0]);
+      int data_size = in.size();
+
+      if(!inflate_init_done_) {
+        rcod = inflate_init();
+        if(FLATE_IN != rcod) {
+          std::cout << "EXPECT FLATE_IN GOT " << rcod << std::endl;
+          throw 1; // FIXME
+        }
+        inflate_init_done_ = true;
+      } else {
+        if(data_size == 0) {
+          while(last_flat_rcod_ != FLATE_OK) {
+            switch(last_flat_rcod_) {
+              case FLATE_OUT:
+                out.insert(out.end(), stream.next_out, stream.next_out+stream.avail_out);
+                break;
+              case FLATE_IN:
+              case FLATE_ERR:
+                std::cout << "UNWANTED FLATE_IN/FLATE_ERR " << last_flat_rcod_ << std::endl;
+                throw 3; // FIXME
+            }
+            inflate();
+          }
+
+          if(FLATE_END != inflate_end()) {
+            std::cout << "EXPECT FLATE_END" << std::endl;
+            throw 2; // FIXME
+          }
+        } else {
+          rcod = last_flat_rcod_;
+        }
+      }
+
+      for(;;rcod = inflate()) {
+        switch(last_flat_rcod_) {
+          case FLATE_IN:
+            if(data_size <= 0) {
+              stream.avail_in = 0;
+              return;
+            }
+            if(data_size < BUFFER_SIZE) {
+              memcpy(stream.next_in, data, data_size);
+              stream.avail_in = data_size;
+              data_size = 0;
+            } else {
+              memcpy(stream.next_in, data, BUFFER_SIZE);
+              stream.avail_in = BUFFER_SIZE;
+              data_size -= BUFFER_SIZE;
+              data += BUFFER_SIZE;
+            }
+            break;
+          case FLATE_OUT:
+            out.insert(out.end(), stream.next_out, stream.next_out+stream.avail_out);
+            break;
+          case FLATE_END:
+          case FLATE_OK:
+            return;
+            break;
+          case FLATE_ERR:
+            std::cout << "INFLATE ERROR" << std::endl;
+            throw 2; // FIXME
+        }
+      }
+
+      return;
+    }
+
+    void Z::inflate(FILE *in, FILE *out) {
+      unsigned char* buffer = (unsigned char*)malloc(BUFFER_SIZE);
+
+      std::vector<unsigned char> vec_in;
+      std::vector<unsigned char> vec_out;
+
+      bool cont = true;
+      while(cont) {
+        if(int in_size = fread(buffer, 1, BUFFER_SIZE, in)) {
+          vec_in = std::vector<unsigned char>(buffer, buffer+in_size);
+        } else {
+          cont = false;
+        }
+        inflate(vec_in, vec_out);
+        if(vec_out.size() > 0) {
+          if(vec_out.size() != fwrite(&vec_out.front(), 1, vec_out.size(), out)) {
+            std::cout << "INFLATE FILE I/O ERROR" << std::endl;
+            throw 1; // FIXME
+          }
+        }
+        vec_out.clear();
+        vec_in.clear();
+      }
+
+      free(buffer);
+    }
+
+    void Z::inflate(std::fstream & in, std::fstream & out) {
+      unsigned char* buffer = (unsigned char*)malloc(BUFFER_SIZE);
+
+      std::vector<unsigned char> vec_in;
+      std::vector<unsigned char> vec_out;
+
+      bool cont = true;
+      while(cont) {
+        in.read((char*)buffer, BUFFER_SIZE);
+        if(int in_size = in.gcount()) {
+          vec_in = std::vector<unsigned char>(buffer, buffer+in_size);
+        } else {
+          cont = false;
+        }
+        inflate(vec_in, vec_out);
+        if(vec_out.size() > 0) {
+          out.write((const char*)&vec_out.front(), vec_out.size());
+        }
+        vec_out.clear();
+        vec_in.clear();
+      }
+
+      free(buffer);
+    }
   }
 }

@@ -603,7 +603,7 @@ static State *alloc_state(void) {
 
 /* extern */
 
-int inflate(flat_stream *stream) {
+int mgz_inflate(mgz_stream *stream) {
 	State *s = (State*)(stream->state);
 	int n;
 

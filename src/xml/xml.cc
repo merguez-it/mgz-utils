@@ -983,7 +983,7 @@ namespace mgz {
         return false;
       }
 
-      // Subtle bug here. GlowXml did use fgets. But from the XML spec:
+      // Subtle bug here. mgz::xml did use fgets. But from the XML spec:
       // 2.11 End-of-Line Handling
       // <snip>
       // <quote>
