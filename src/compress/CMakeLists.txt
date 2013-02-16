@@ -12,6 +12,7 @@ set(MGZ_COMPRESS_SOURCES
   compressor/raw.cc
   )
 add_library(mgz-compress SHARED ${MGZ_COMPRESS_SOURCES})
+target_link_libraries(mgz-compress mgz-util mgz-security)
 add_library(mgz-compress-s STATIC ${MGZ_COMPRESS_SOURCES})
 
 configure_file(

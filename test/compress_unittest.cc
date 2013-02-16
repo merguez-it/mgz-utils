@@ -153,6 +153,10 @@ TEST(Mgz, TestDeflateInflate) {
     mgz::compress::Z z(mgz::compress::GZIP);
     z.deflate(in, out);
 
+    ASSERT_EQ(3826900168, z.get_crc32());
+    ASSERT_EQ(2318608, z.get_compressed_size());
+    ASSERT_EQ(9193929, z.get_uncompressed_size());
+
     in.close();
     out.close();
   }
@@ -165,6 +169,10 @@ TEST(Mgz, TestDeflateInflate) {
 
     mgz::compress::Z z(mgz::compress::GZIP);
     z.inflate(in, out);
+
+    ASSERT_EQ(3826900168, z.get_crc32());
+    ASSERT_EQ(2318608, z.get_compressed_size());
+    ASSERT_EQ(9193929, z.get_uncompressed_size());
 
     in.close();
     out.close();

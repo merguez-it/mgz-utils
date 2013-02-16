@@ -44,7 +44,6 @@ namespace mgz {
         unsigned int get_compressed_size();
         unsigned int get_uncompressed_size();
 
-
       public:
         mgz_stream stream;
 
@@ -84,8 +83,11 @@ namespace mgz {
         int last_flat_rcod_;
 
         unsigned int checksum_;
+        unsigned int crc32_;
         unsigned int nin_;
         unsigned int nout_;
+        unsigned int compress_size_;
+        unsigned int uncompress_size_;
         unsigned int header_size_;
         unsigned int footer_size_;
         unsigned int extra_size_;

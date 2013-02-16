@@ -9,7 +9,6 @@ set(MGZ_IO_SOURCES
   )
 add_library(mgz-io SHARED ${MGZ_IO_SOURCES})
 target_link_libraries(mgz-io mgz-util mgz-regex mgz-security mgz-xml)
-
 add_library(mgz-io-s STATIC ${MGZ_IO_SOURCES})
 
 configure_file(

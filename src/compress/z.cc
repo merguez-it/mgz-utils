@@ -372,13 +372,13 @@ namespace mgz {
     Z::Z(CompressionType type) : type_(type), deflate_init_done_(false), inflate_init_done_(false) { }
     
     unsigned int Z::get_crc32() {
-      return 0;
+      return crc32_;
     }
     unsigned int Z::get_compressed_size() {
-      return 0;
+      return compress_size_;
     }
     unsigned int Z::get_uncompressed_size() {
-      return 0;
+      return uncompress_size_;
     }
 
     // compress -------------------------------------------------------------------
@@ -387,8 +387,11 @@ namespace mgz {
       int rcod;
 
       checksum_ = 0;
+      crc32_ = 0;
       nin_ = 0;
       nout_ = 0;
+      compress_size_ = 0;
+      uncompress_size_ = 0;
       header_size_ = 0;
       footer_size_ = 0;
       extra_size_ = 0;
@@ -437,16 +440,18 @@ namespace mgz {
           nin_ += stream.avail_in;
           switch(type_) {
             case GZIP:
-              checksum_ = crc32(stream.next_in, stream.avail_in, checksum_);
+              crc32_ = checksum_ = crc32(stream.next_in, stream.avail_in, checksum_);
               break;
             case ZLIB:
               checksum_ = adler32(stream.next_in, stream.avail_in, checksum_);
+              crc32_ = crc32(stream.next_in, stream.avail_in, crc32_);
               break;
             case PKZIP:
-              checksum_ = crc32(stream.next_in, stream.avail_in, checksum_);
+              crc32_ = checksum_ = crc32(stream.next_in, stream.avail_in, checksum_);
               break;
             default:
               checksum_ = dummysum(stream.next_in, stream.avail_in, checksum_);
+              crc32_ = crc32(stream.next_in, stream.avail_in, crc32_);
           }
           break;
         case FLATE_OUT:
@@ -492,6 +497,9 @@ namespace mgz {
           last_flat_rcod_ = FLATE_END;
         }
       }
+
+      compress_size_ = nout_;
+      uncompress_size_ = nin_;
 
       return last_flat_rcod_;
     }
@@ -625,8 +633,11 @@ namespace mgz {
 
     int Z::inflate_init() {
       checksum_ = 0;
+      crc32_ = 0;
       nin_ = 0;
       nout_ = 0;
+      compress_size_ = 0;
+      uncompress_size_ = 0;
       header_size_ = 0;
       footer_size_ = 0;
       extra_size_ = 0;
@@ -684,16 +695,18 @@ namespace mgz {
         case FLATE_OUT:
           switch(type_) {
             case GZIP:
-              checksum_ = crc32(stream.next_out, stream.avail_out, checksum_);
+              crc32_ = checksum_ = crc32(stream.next_out, stream.avail_out, checksum_);
               break;
             case ZLIB:
               checksum_ = adler32(stream.next_out, stream.avail_out, checksum_);
+              crc32_ = crc32(stream.next_out, stream.avail_out, crc32_);
               break;
             case PKZIP:
-              checksum_ = crc32(stream.next_out, stream.avail_out, checksum_);
+              crc32_ = checksum_ = crc32(stream.next_out, stream.avail_out, checksum_);
               break;
             default:
               checksum_ = dummysum(stream.next_out, stream.avail_out, checksum_);
+              crc32_ = crc32(stream.next_out, stream.avail_out, crc32_);
           }
           nout_ += stream.avail_out;
           stream.avail_out = BUFFER_SIZE;
@@ -741,6 +754,10 @@ namespace mgz {
         extra_size_ = stream.avail_in - k;
         last_flat_rcod_ = FLATE_END;
       }
+
+      compress_size_ = nin_;
+      uncompress_size_ = nout_;
+
       return last_flat_rcod_;
     }
 
