@@ -5,6 +5,11 @@ set(MGZ_COMPRESS_SOURCES
   internal/deflate.c
   internal/inflate.c
   z.cc
+  compressor.cc
+  compressor/gzip.cc
+  compressor/pkzip.cc
+  compressor/zlib.cc
+  compressor/raw.cc
   )
 add_library(mgz-compress SHARED ${MGZ_COMPRESS_SOURCES})
 add_library(mgz-compress-s STATIC ${MGZ_COMPRESS_SOURCES})

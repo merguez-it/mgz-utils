@@ -34,7 +34,7 @@ namespace mgz {
         virtual ~compressor() {};
 
         virtual void compress() = 0;
-        virtual void decompress(int size = -1) = 0;
+        virtual void decompress() = 0;
 
         unsigned long get_crc32();
         unsigned int get_compressed_size();

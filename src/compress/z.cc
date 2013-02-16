@@ -370,6 +370,16 @@ namespace mgz {
     // Public part ----------------------------------------------------------------
 
     Z::Z(CompressionType type) : type_(type), deflate_init_done_(false), inflate_init_done_(false) { }
+    
+    unsigned int Z::get_crc32() {
+      return 0;
+    }
+    unsigned int Z::get_compressed_size() {
+      return 0;
+    }
+    unsigned int Z::get_uncompressed_size() {
+      return 0;
+    }
 
     // compress -------------------------------------------------------------------
 

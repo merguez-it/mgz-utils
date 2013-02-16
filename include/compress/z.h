@@ -39,6 +39,11 @@ namespace mgz {
         void inflate(const std::vector<unsigned char> & in, std::vector<unsigned char> & out);
         void inflate(FILE *in, FILE *out);
         void inflate(std::fstream & in, std::fstream & out);
+      
+        unsigned int get_crc32();
+        unsigned int get_compressed_size();
+        unsigned int get_uncompressed_size();
+
 
       public:
         mgz_stream stream;
