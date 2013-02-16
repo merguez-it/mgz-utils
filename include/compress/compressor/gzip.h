@@ -7,6 +7,8 @@ namespace mgz {
   namespace compress {
 
     class gzip : public compressor {
+    public :
+      gzip(std::fstream & file, std::fstream & archive, int level = COMPRESSION_LEVEL_4) : compressor(file,archive,level) {};
       void compress();
       void decompress();
     };

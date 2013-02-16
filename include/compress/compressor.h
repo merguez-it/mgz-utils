@@ -6,6 +6,13 @@
 #include "util/exception.h"
 #include "security/crc32.h"
 
+#define FDF(TYPE, ACTION, IN, OUT) \
+Z zipper(TYPE); \
+zipper.ACTION(IN, OUT); \
+crc_ = zipper.get_crc32(); \
+compressed_size_ = zipper.get_compressed_size(); \
+uncompressed_size_ = zipper.get_uncompressed_size();
+
 namespace mgz {
   namespace compress {
     class CompressorInitException {};
@@ -44,7 +51,7 @@ namespace mgz {
         std::fstream & file_;
         std::fstream & archive_;
         int level_;
-        mgz::security::crc32sum crc_;
+        unsigned int crc_;
         unsigned int compressed_size_;
         unsigned int uncompressed_size_;
     };

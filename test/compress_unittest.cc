@@ -3,8 +3,13 @@
 #include "io/file.h"
 #include "gtest/gtest.h"
 #include "config-test.h"
+#include "compress/compressor/gzip.h"
+#include "compress/compressor/pkzip.h"
+#include "compress/compressor/zlib.h"
+#include "compress/compressor/raw.h"
 
-TEST(Mgz, TestDeflateFILE) {
+
+TEST(Compress, TestDeflateFILE) {
   mgz::io::file in_file(MGZ_TESTS_PATH(compress/z_test_deflate.txt));
   mgz::io::file out_file("z_test_deflate.file.gz");
 
@@ -20,7 +25,7 @@ TEST(Mgz, TestDeflateFILE) {
   EXPECT_TRUE(out_file.exist());
 }
 
-TEST(Mgz, TestDeflateSTREAM) {
+TEST(Compress, TestDeflateSTREAM) {
   mgz::io::file in_file(MGZ_TESTS_PATH(compress/z_test_deflate.txt));
   mgz::io::file out_file("z_test_deflate.stream.gz");
 
@@ -36,7 +41,7 @@ TEST(Mgz, TestDeflateSTREAM) {
   EXPECT_TRUE(out_file.exist());
 }
 
-TEST(Mgz, TestDeflateVECTOR) {
+TEST(Compress, TestDeflateVECTOR) {
   std::vector<unsigned char> out;
 
   mgz::compress::Z z(mgz::compress::GZIP);
@@ -72,7 +77,7 @@ TEST(Mgz, TestDeflateVECTOR) {
   EXPECT_TRUE(out_file.exist());
 }
 
-TEST(Mgz, TestInfate) {
+TEST(Compress, TestInfate) {
   std::string outstr;
   mgz::io::file in_file(MGZ_TESTS_PATH(compress/z_test_inflate.txt.gz));
   FILE *in = fopen(in_file.get_path().c_str(), "rb");
@@ -96,7 +101,7 @@ TEST(Mgz, TestInfate) {
   fclose(in);
 }
 
-TEST(Mgz, TestInfateVECTOR) {
+TEST(Compress, TestInfateVECTOR) {
   std::vector<unsigned char> vec_in;
   std::vector<unsigned char> vec_out;
 
@@ -123,7 +128,7 @@ TEST(Mgz, TestInfateVECTOR) {
   in.close();
 }
 
-TEST(Mgz, TestInfateFILE) {
+TEST(Compress, TestInfateFILE) {
   mgz::io::file in_file(MGZ_TESTS_PATH(compress/z_test_inflate.txt.gz));
   mgz::io::file out_file("z_test_inflate.txt");
 
@@ -139,7 +144,7 @@ TEST(Mgz, TestInfateFILE) {
   EXPECT_TRUE(out_file.exist());
 }
 
-TEST(Mgz, TestDeflateInflate) {
+TEST(Compress, TestDeflateInflate) {
   mgz::io::file ori_file(MGZ_TESTS_PATH(compress/lorem.txt));
   uint32_t ori_crc = ori_file.crc32();
 
@@ -181,4 +186,52 @@ TEST(Mgz, TestDeflateInflate) {
   ASSERT_TRUE(inflate_file.exist());
 
   ASSERT_EQ(ori_crc, inflate_file.crc32());
+}
+
+#define TEST_COMPRESSOR(TYPE, CSIZE) \
+mgz::io::file ori_file(MGZ_TESTS_PATH(compress/lorem.txt)); \
+uint32_t ori_crc = ori_file.crc32(); \
+mgz::io::file deflate_file(#TYPE "_lorem.txt." #TYPE); \
+mgz::io::file inflate_file(#TYPE "_lorem.txt"); \
+{ \
+  std::fstream file(ori_file.get_path().c_str(), std::fstream::in | std::fstream::binary); \
+  std::fstream archive(deflate_file.get_path().c_str(), std::fstream::out | std::fstream::binary); \
+  mgz::compress::TYPE zipper(file,archive); \
+  zipper.compress(); \
+  ASSERT_EQ(3826900168, zipper.get_crc32()); \
+  ASSERT_EQ(CSIZE, zipper.get_compressed_size()); \
+  ASSERT_EQ(9193929, zipper.get_uncompressed_size()); \
+  file.close(); \
+  archive.close(); \
+} \
+ASSERT_TRUE(deflate_file.exist()); \
+{ \
+  std::fstream archive(deflate_file.get_path().c_str(), std::fstream::in | std::fstream::binary); \
+  std::fstream file(inflate_file.get_path().c_str(), std::fstream::out | std::fstream::binary); \
+  mgz::compress::TYPE unzipper(file,archive); \
+  unzipper.decompress(); \
+  ASSERT_EQ(3826900168, unzipper.get_crc32()); \
+  ASSERT_EQ(CSIZE, unzipper.get_compressed_size()); \
+  ASSERT_EQ(9193929, unzipper.get_uncompressed_size()); \
+  file.close(); \
+  archive.close(); \
+} \
+ASSERT_TRUE(inflate_file.exist()); \
+ASSERT_EQ(ori_crc, inflate_file.crc32());
+
+
+TEST(Compress, TestCompressorGzip) {
+  TEST_COMPRESSOR(gzip, 2318608)
+}
+
+TEST(Compress, TestCompressorPkzip) {
+  TEST_COMPRESSOR(pkzip, 2318714)
+}
+
+TEST(Compress, TestCompressorZlib) {
+  TEST_COMPRESSOR(zlib, 2318596)
+}
+
+TEST(Compress, TestCompressorRaw) {
+  TEST_COMPRESSOR(raw, 2318590)
 }

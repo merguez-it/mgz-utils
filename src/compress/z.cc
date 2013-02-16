@@ -395,10 +395,8 @@ namespace mgz {
       header_size_ = 0;
       footer_size_ = 0;
       extra_size_ = 0;
-      if(GZIP == type_ || PKZIP == type_) {
-        crc32init();
-      }
-
+      crc32init();
+      
       stream.next_in = (unsigned char*)malloc(BUFFER_SIZE);
       memset(stream.next_in, 0, BUFFER_SIZE);
       stream.next_out = (unsigned char*)malloc(BUFFER_SIZE);
@@ -641,9 +639,7 @@ namespace mgz {
       header_size_ = 0;
       footer_size_ = 0;
       extra_size_ = 0;
-      if(GZIP == type_ || PKZIP == type_) {
-        crc32init();
-      }
+      crc32init();
 
       stream.next_in = stream.begin = (unsigned char*)malloc(BUFFER_SIZE);
       memset(stream.next_in, 0, BUFFER_SIZE);

@@ -9,7 +9,7 @@ namespace mgz {
     };
 
     unsigned long compressor::get_crc32() {
-      return crc_.crc;
+      return crc_;
     }
     unsigned int compressor::get_compressed_size() {
       return compressed_size_;
