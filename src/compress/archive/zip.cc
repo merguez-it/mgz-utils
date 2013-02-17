@@ -2,7 +2,7 @@
 #include "compress/archive/zip.h"
 #include "compress/archive/internal/common.h"
 #include "compress/compressor.h"
-#include "compress/compressor/gzip.h"
+#include "compress/compressor/raw.h"
 #include "util/exception.h"
 
 namespace mgz {
@@ -160,7 +160,7 @@ namespace mgz {
           bool empty_it=cdhs.descriptor.uncompressed_size==0;
           if (!empty_it) {
             std::fstream to_zip_stream((*it).first.c_str(),std::ios::in | std::ios::binary);
-            mgz::compress::gzip zipator(to_zip_stream,archive_stream_,level_);
+            mgz::compress::raw zipator(to_zip_stream,archive_stream_,level_);
             cdh=compress_and_write_data(zipator,cdh);
           }
         }

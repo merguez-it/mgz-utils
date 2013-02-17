@@ -1,6 +1,6 @@
 #include "compress/archive/unzip.h"
 // FIXME : #include "util/log.h"
-#include "compress/compressor/gzip.h"
+#include "compress/compressor/raw.h"
 #ifdef GLOW_WIN32
 #include <string.h>
 #endif
@@ -149,7 +149,7 @@ namespace mgz {
 
               is_.seekg(e.file_offset);
               std::fstream os(outfile.get_path().c_str(), std::ios::binary | std::ios::out);
-              mgz::compress::compressor * cmp = new mgz::compress::gzip(os, is_);
+              mgz::compress::compressor * cmp = new mgz::compress::raw(os, is_);
               cmp->decompress();
               if(e.crc32 != cmp->get_crc32()) {
                 THROW(UncompressError, "Wrong CRC32 %ld, expected %ld for file %s", cmp->get_crc32(), e.crc32, e.file_name.c_str());
