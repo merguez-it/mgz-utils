@@ -183,6 +183,13 @@ namespace mgz {
         std::string get_path();
 
         /*!
+         * \brief Converts this abstract pathname into a pathname string in UNIX format.
+         *
+         * \return The pathname string
+         */
+        std::string get_unix_path();
+
+        /*!
          * \brief Returns the name of the file or directory denoted by this abstract pathname.
          * 
          * \return The name string
@@ -373,12 +380,22 @@ namespace mgz {
         void set_permissions(mode_t perms);
 
         /*!
+         * \brief Reads the modification date+time of this file into a timespec structure.
+         */
+        struct tm get_modification_datetime();
+
+        /*!
+         * \brief Reads the creation date+time of this file into a timespec structure..
+         */
+        struct tm get_creation_datetime();
+
+        /*!
          * \brief Compute the crc32 checksum of this file, if it exists and is not a directory
          * \return The crc32 checksum computed with the content of this file.
          * \throws FileShouldExistException if the file does not exist.
          * \throws FileShouldNotBeFolderException if the file represents an existing directory
          */
-        crc32_t crc32();
+        uint32_t crc32();
 
         mode_t get_mode();
         mode_t get_lmode();

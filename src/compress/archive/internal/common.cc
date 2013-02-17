@@ -1,4 +1,4 @@
-#include "zip/common.h"
+#include "compress/archive/internal/common.h"
 
 short rotate(short x, int n) {
   return ~(~(x >> n) ^ ((x & ~(~0 << n))<<((sizeof (x)*8)-n)));

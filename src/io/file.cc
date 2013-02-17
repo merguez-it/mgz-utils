@@ -185,6 +185,20 @@ namespace mgz {
       return filepath_;
     }
 
+    std::string file::get_unix_path() {
+#ifdef __WIN32__
+      std::string fp(filepath_);
+      Glow::Util::RE disk(CAPTURED_ROOT_PATH_REGEX);
+      if(disk.find(fp)) {
+        fp = disk.replace(0, FILE_SEPARATOR);
+      }
+
+      return Glow::Util::replace_delim(fp, FILE_SEPARATOR_CHAR, UNIX_FILE_SEPARATOR_C);
+#else
+      return get_path();
+#endif
+    }
+
     std::string file::get_name() {
       size_t found = filepath_.find_last_of(FILE_SEPARATOR);
       if(found != std::string::npos) {
@@ -660,9 +674,37 @@ namespace mgz {
 #endif
     }
 
+    /*!
+     * \brief Reads the modification date+time of this file into a timespec structure.
+     */
+    struct tm file::get_modification_datetime() {
+      time_t time_sec;
+      initialize_status();
+#ifdef __WIN32__
+      time_sec=status_.st_mtime;
+#else
+      time_sec=status_.st_mtimespec.tv_sec;
+#endif
+      return (*localtime(&time_sec));
+    }
+
+    /*!
+     * \brief Reads the creation date+time of this file into a timespec structure..
+     */
+    struct tm file::get_creation_datetime() {
+      time_t time_sec;
+      initialize_status();
+#ifdef __WIN32__
+      time_sec=status_.st_ctime;
+#else
+      time_sec=status_.st_birthtimespec.tv_sec;
+#endif
+      return (*localtime(&time_sec));
+    }
+
 #define HASH_BUFFER_SIZE ( 1024 * 2048 ) //2MB buffer
 
-    crc32_t file::crc32() {
+    uint32_t file::crc32() {
       if (!exist()) {
         THROW(FileShouldExistException,"Cannot open the file %s as it does not exist",filepath_.c_str())
       }
@@ -685,7 +727,6 @@ namespace mgz {
 
       return crc32.crc;
     }
-
   }
 }
 
