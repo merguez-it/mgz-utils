@@ -26,6 +26,7 @@
 #define UNIX_FILE_SEPARATOR "/"
 #define UNIX_FILE_SEPARATOR_C '/'
 #define ROOT_PATH_REGEX "^[a-zA-Z]:\\\\"
+#define CAPTURED_ROOT_PATH_REGEX "(^[a-zA-Z]:\\\\)"
 #else // __WIN32__
 #include <unistd.h>
 
@@ -57,14 +58,14 @@ class FileShouldExistException{};
 class FileShouldNotBeFolderException{};
 
 /*! \namespace mgz
- * 
+ *
  * \brief Root namespace for all mgz specifics functions and classes
  */
 namespace mgz {
   /*! \namespace mgz::io
    *
    * \brief Namespace for mgz io tools
-   */ 
+   */
   namespace io {
     /*! \class mgz::io::file
      *
@@ -98,21 +99,21 @@ namespace mgz {
 
         /*!
          * \brief Tests whether the file denoted by this abstract pathname is a regular file
-         * 
+         *
          * \return True if the file is a regular file
          */
         bool is_file();
 
         /*!
          * \brief Tests whether the file denoted by this abstract pathname is a directory
-         * 
+         *
          * \return True if the file is a directory
          */
         bool is_directory();
 
         /*!
          * \brief Tests whether the file denoted by this abstract pathname is a symbolic link
-         * 
+         *
          * \return True if the file is a symbolic link
          */
         bool is_symlink();
@@ -131,7 +132,7 @@ namespace mgz {
 
         /*!
          * \brief Tests whether the file denoted by this abstract pathname is defined
-         * 
+         *
          * \return True if the file is defined
          */
         bool is_defined();
@@ -152,7 +153,7 @@ namespace mgz {
 
         /*!
          * \brief Creates a new File instance from a parent file and a child file.
-         * 
+         *
          * \param parent : The parent file
          * \param child : The parent file
          * \return A new file instance
@@ -161,7 +162,7 @@ namespace mgz {
 
         /*!
          * \brief Creates a new File instance from this abstract file and a child file.
-         * 
+         *
          * \param child : The child file
          * \return A new file instance
          */
@@ -169,7 +170,7 @@ namespace mgz {
 
         /*!
          * \brief Creates a new File instance from this abstract file and a child file.
-         * 
+         *
          * \param child : The child file
          * \return A new file instance
          */
@@ -177,7 +178,7 @@ namespace mgz {
 
         /*!
          * \brief Converts this abstract pathname into a pathname string.
-         * 
+         *
          * \return The pathname string
          */
         std::string get_path();
@@ -191,21 +192,21 @@ namespace mgz {
 
         /*!
          * \brief Returns the name of the file or directory denoted by this abstract pathname.
-         * 
+         *
          * \return The name string
          */
         std::string get_name();
 
         /*!
          * \brief Returns the absolute pathname string of this abstract pathname.
-         * 
+         *
          * \return The absolute pathname string
          */
         std::string get_absolute_path();
 
         /*!
          * \brief Returns a copy the absolute pathname file of this abstract pathname.
-         * 
+         *
          * \return The absolute pathname file
          */
         file get_absolute_file();
@@ -224,34 +225,34 @@ namespace mgz {
 
         /*!
          * \brief Returns the pathname string of this abstract pathname's parent, or an empty string if this pathname does not name a parent directory.
-         * 
+         *
          * \return The parent pathname string or en empty string
          */
         std::string get_parent_path();
         /*!
          * \brief Returns the abstract pathname of this abstract pathname's parent, or an empty abstract pathname if this pathname does not name a parent directory.
-         * 
+         *
          * \return The abstract pathname of this abstract pathname's parent, or an empty abstract pathname
          */
         file get_parent_file();
 
         /*!
          * \brief Returns the extension string of this abstract pathname.
-         * 
+         *
          * \return The extension string
          */
         std::string get_extension();
 
         /*!
          * \brief Returns the name of the file,without its last extension.
-         * 
+         *
          * \return The name without extension
          */
         std::string get_name_without_extension();
 
         /*!
          * \brief Returns the relative abstract pathname of this relative pathname from the given relative pathname.
-         * 
+         *
          * \param root : An abstract pathname
          * \return The relative pathname
          */
@@ -266,7 +267,7 @@ namespace mgz {
 
         /*!
          * \brief Returns the relative pathname string of this relative pathname from the given relative pathname.
-         * 
+         *
          * \param root : An abstract pathname
          * \return The relative pathname string
          */
@@ -274,7 +275,7 @@ namespace mgz {
 
         /*!
          * \brief Returns the relative pathname string of this relative pathname from the given relative pathname.
-         * 
+         *
          * \param root : A string path
          * \return The relative pathname string
          */
@@ -312,7 +313,7 @@ namespace mgz {
 
         /*!
          * \brief Copy the file or directory denoted by this abstract pathname.
-         * \param file : destination the abstract pathname 
+         * \param file : destination the abstract pathname
          * \return true on success, false otherwise
          */
         bool copy(file);
@@ -333,7 +334,7 @@ namespace mgz {
 
         /*!
          * \brief Move the file or directory denoted by this abstract pathname.
-         * \param file : destination the abstract pathname 
+         * \param file : destination the abstract pathname
          * \return true on success, false otherwise
          */
         bool move(file);
@@ -375,7 +376,7 @@ namespace mgz {
 
         /*!
          * \brief Set (Unix) permissions to the file (no effect on directories).
-         * \param perms : Unix permissions, like "0755" 
+         * \param perms : Unix permissions, like "0755"
          */
         void set_permissions(mode_t perms);
 

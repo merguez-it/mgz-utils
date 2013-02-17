@@ -1,7 +1,7 @@
 #include "compress/archive/unzip.h"
 // FIXME : #include "util/log.h"
 #include "compress/compressor/raw.h"
-#ifdef GLOW_WIN32
+#ifdef __WIN32__
 #include <string.h>
 #endif
 #include <algorithm>
@@ -114,7 +114,7 @@ namespace mgz {
 
       void unzip::inflate_file_at_index(int i, mgz::io::file & to) {
         entry e = file_stat_at_index(i);
-        
+
         switch(e.compression_method) {
           case CM_STORE:
             {

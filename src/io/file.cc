@@ -1,5 +1,6 @@
 #include "config.h"
 #ifdef __WIN32__
+#include <time.h>
 #ifdef HAVE_WINDOWS_H
 #include <windows.h>
 #endif // HAVE_WINDOWS_H
@@ -42,7 +43,7 @@ namespace mgz {
         if (path_.find_last_of(FILE_SEPARATOR) == (path_.size() - 1)) {
           path_ = path_.substr(0, path_.size() - 1);
           //TODO: Attention, pansement ci-dessous - Investiguer pourquoi on reçoit parfois \ dans filepath_ sur PC.
-          if (path_.empty()) { 
+          if (path_.empty()) {
             return;
           }
         }
@@ -70,7 +71,7 @@ namespace mgz {
       return lstatus_.st_mode;
     }
 
-    bool file::is_type(mode_t m) {       
+    bool file::is_type(mode_t m) {
       if (exist()) {
         return (((get_mode()) & S_IFMT) == m);
       } else {
@@ -78,7 +79,7 @@ namespace mgz {
       }
     }
 
-    bool file::is_ltype(mode_t m) {       
+    bool file::is_ltype(mode_t m) {
       if (exist()) {
         return (((get_lmode()) & S_IFMT) == m);
       } else {
@@ -188,12 +189,12 @@ namespace mgz {
     std::string file::get_unix_path() {
 #ifdef __WIN32__
       std::string fp(filepath_);
-      Glow::Util::RE disk(CAPTURED_ROOT_PATH_REGEX);
+      mgz::regex::RE disk(CAPTURED_ROOT_PATH_REGEX);
       if(disk.find(fp)) {
         fp = disk.replace(0, FILE_SEPARATOR);
       }
 
-      return Glow::Util::replace_delim(fp, FILE_SEPARATOR_CHAR, UNIX_FILE_SEPARATOR_C);
+      return mgz::util::replace_delim(fp, FILE_SEPARATOR_CHAR, UNIX_FILE_SEPARATOR_C);
 #else
       return get_path();
 #endif
@@ -203,10 +204,10 @@ namespace mgz {
       size_t found = filepath_.find_last_of(FILE_SEPARATOR);
       if(found != std::string::npos) {
         if((filepath_.size() - 1) == found) { // Ignore final FILE_SEPARATOR (folder mark), to get folder name
-          found = filepath_.find_last_of(FILE_SEPARATOR,found-1); 
+          found = filepath_.find_last_of(FILE_SEPARATOR,found-1);
         }
         if (found != std::string::npos) {
-          return filepath_.substr(found+1);          
+          return filepath_.substr(found+1);
         }
       }
       return filepath_;
@@ -265,7 +266,7 @@ namespace mgz {
           return complete.append(mgz::util::join(path_final, FILE_SEPARATOR_CHAR));
 #endif
         }
-      }     
+      }
     }
 
     file file::get_absolute_file() {
@@ -323,12 +324,12 @@ namespace mgz {
       size_t found = filepath_.find_last_of(FILE_SEPARATOR);
       if(found != std::string::npos) {
         if((filepath_.size() - 1) == found) { // Ignore final FILE_SEPARATOR (folder mark), to get the real parent
-          found = filepath_.find_last_of(FILE_SEPARATOR,found-1); 
+          found = filepath_.find_last_of(FILE_SEPARATOR,found-1);
         }
         if(found != std::string::npos) {
           return filepath_.substr(0, found);
         }
-      } 
+      }
       return "";
     }
 
@@ -337,9 +338,9 @@ namespace mgz {
       if(parent.empty()) {
         return file();
       } else {
-        return file(parent); 
+        return file(parent);
       }
-    } 
+    }
 
     std::string file::get_extension() {
       return get_name().substr(get_name().find_last_of(".") + 1);
@@ -542,7 +543,7 @@ namespace mgz {
           mgz::io::file dest_file = destination.join(get_name());
           return copy(dest_file);
         } else {
-          if(exist() && destination.get_parent_file().mkdirs()) { 
+          if(exist() && destination.get_parent_file().mkdirs()) {
 #ifdef __WIN32__
             return (0 != ::CopyFile(filepath_.c_str(), destination.get_path().c_str(), FALSE));
 #else
@@ -608,16 +609,16 @@ namespace mgz {
       return filepath_.find_last_of(FILE_SEPARATOR)==filepath_.size()-1;
     }
 
-    bool file::move(file destination) {   
+    bool file::move(file destination) {
       if(exist() && destination.get_parent_file().mkdirs()) {
         if (is_directory()) {
           bool move_into=destination.represents_directory() || destination.is_directory();
           if (move_into) {
             destination.mkdirs();
-            destination = destination.join(this->get_name()); 
+            destination = destination.join(this->get_name());
           } //else, it is a "rename" of the dir (+ optionnally a "move")
         }
-        int result = rename( filepath_.c_str() , destination.filepath_.c_str()); 
+        int result = rename( filepath_.c_str() , destination.filepath_.c_str());
         if (0 ==result) {
           return true;
         }
@@ -625,7 +626,7 @@ namespace mgz {
       } else {
         return false;
       }
-    }    
+    }
 
     std::string file::current_directory_path() {
       char buffer[PATH_MAX];

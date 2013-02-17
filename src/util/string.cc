@@ -31,12 +31,12 @@ namespace mgz {
           if(keep) {
             keep = false;
             result.append(1, ' ');
-          }   
+          }
         } else {
           keep = true;
-          result.append(1, c); 
-        }   
-      }   
+          result.append(1, c);
+        }
+      }
 
       return result;
     }
@@ -67,6 +67,9 @@ namespace mgz {
       return result;
     }
 
+    std::string replace_delim(const std::string &s, char i, char t) {
+      return replace_all(s,std::string(1,i),std::string(1,t));
+    }
     std::string to_upper(const std::string &s) {
       std::string r = s;
       std::transform(r.begin(), r.end(), r.begin(), ::toupper);
@@ -82,7 +85,7 @@ namespace mgz {
     std::string classify(const std::string &s) {
       std::string r("");
       std::vector<std::string> l = split(s, '_');
-      std::vector<std::string>::iterator it; 
+      std::vector<std::string>::iterator it;
       for(it = l.begin(); it < l.end(); it++) {
         std::string p(to_lower(*it));
         p[0] = toupper(p[0]);
@@ -118,7 +121,7 @@ namespace mgz {
       size_t start_pos = 0;
       while((start_pos = str.find(from, start_pos)) != std::string::npos) {
         str.replace(start_pos, from.length(), to);
-        start_pos += to.length(); 
+        start_pos += to.length();
       }
     }
 
@@ -150,7 +153,7 @@ namespace mgz {
         return n;
       }
 
-      typedef std::vector< std::vector<int> > Tmatrix; 
+      typedef std::vector< std::vector<int> > Tmatrix;
       Tmatrix matrix(n+1);
 
       for (int i = 0; i <= n; i++) {

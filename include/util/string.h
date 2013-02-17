@@ -13,11 +13,12 @@ namespace mgz {
     std::vector<std::string>& split(const std::string &s, char delim, std::vector<std::string> &elems);
     std::vector<std::string> split(const std::string &s, char delim);
     std::string join(const std::vector<std::string> &vector, char delim);
-    std::string to_upper(const std::string &s); 
-    std::string to_lower(const std::string &s); 
-    std::string classify(const std::string &s); 
+    std::string replace_delim(const std::string &s, char i, char t);
+    std::string to_upper(const std::string &s);
+    std::string to_lower(const std::string &s);
+    std::string classify(const std::string &s);
     std::string format(const std::string & format, ...);
-    std::string random_string(const int len, const std::string &prefix = ""); 
+    std::string random_string(const int len, const std::string &prefix = "");
 
     void replace_all(std::string& str, const std::string& from, const std::string& to);
     std::string replace_all(const std::string &s, char i, char t);
@@ -26,7 +27,7 @@ namespace mgz {
     int asInt(const std::string &intString);
     int levenshtein_distance(const std::string &source, const std::string &target);
 
-    enum soundex_lang { 
+    enum soundex_lang {
       FR,
       EN
     };
@@ -40,7 +41,7 @@ namespace mgz {
         return is;
       }
 
-      operator std::string() const { return data; }    
+      operator std::string() const { return data; }
     };
 
     std::string pluralize(const std::string &singular);
