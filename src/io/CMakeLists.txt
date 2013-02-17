@@ -6,6 +6,7 @@ set(MGZ_IO_SOURCES
   properties.cc
   faststream.cc
   stream.cc
+  filesystem.cc
   )
 add_library(mgz-io SHARED ${MGZ_IO_SOURCES})
 target_link_libraries(mgz-io mgz-util mgz-regex mgz-security mgz-xml)
