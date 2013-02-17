@@ -11,6 +11,7 @@ namespace mgz {
     namespace archive {
       unzip::unzip(mgz::io::file & archive) : archive_(archive) {
         archive_size_ = archive_.size();
+        is_.exceptions ( std::ifstream::badbit ); // dont set "failbit", as it may reflect normal conditions, when attempting to read more bytes than actually available in the file.
         is_.open(archive_.get_path().c_str(), std::ios::binary | std::ios::in);
 
         read_eocdh();
@@ -113,8 +114,7 @@ namespace mgz {
 
       void unzip::inflate_file_at_index(int i, mgz::io::file & to) {
         entry e = file_stat_at_index(i);
-
-
+        
         switch(e.compression_method) {
           case CM_STORE:
             {
@@ -146,7 +146,6 @@ namespace mgz {
                 outfile.get_parent_file().mkdirs();
               }
               // FIXME : Logger::info("Uncompress file %s", outfile.get_path().c_str());
-
               is_.seekg(e.file_offset);
               std::fstream os(outfile.get_path().c_str(), std::ios::binary | std::ios::out);
               mgz::compress::compressor * cmp = new mgz::compress::raw(os, is_);
@@ -154,7 +153,9 @@ namespace mgz {
               if(e.crc32 != cmp->get_crc32()) {
                 THROW(UncompressError, "Wrong CRC32 %ld, expected %ld for file %s", cmp->get_crc32(), e.crc32, e.file_name.c_str());
               }
+              delete cmp;
               os.close();
+              is_.clear();
               is_.seekg(0);
             }
             break;
@@ -172,7 +173,6 @@ namespace mgz {
 
         central_directory_header cdh = cdh_[i];
         is_.seekg(cdh.static_part.offset_of_local_header);
-
         is_.read(reinterpret_cast<char*>(&lfh.static_part), LFH_STATIC_LENGTH);
         if(LFH_SIGNATURE != lfh.static_part.signature) {
           THROW(MalformatedLocalFileHeader, "Wrong signature");
