@@ -91,3 +91,7 @@ add_executable(compress_unittest "compress_unittest.cc")
 target_link_libraries(compress_unittest ${TESTS_LIBS})
 add_test(COMPRESS_UNITTEST compress_unittest)
 
+add_executable(filesystem_unittest "filesystem_unittest.cc")
+target_link_libraries(filesystem_unittest ${TESTS_LIBS})
+add_test(FILESYSTEM_UNITTEST filesystem_unittest)
+

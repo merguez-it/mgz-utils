@@ -1,0 +1,12 @@
+#ifndef __MGZ_UTIL_UNITS_INCLUDE
+#define __MGZ_UTIL_UNITS_INCLUDE
+
+enum os_size_unit {
+  BYTES = 1,
+  KILO_BYTES = (1024),
+  MEGA_BYTES = (1024*1024),
+  GIGA_BITES = (1024*1024*1024)
+};
+
+#endif // __MGZ_UTIL_UNITS_INCLUDE
+
