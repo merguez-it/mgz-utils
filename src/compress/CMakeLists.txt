@@ -12,7 +12,7 @@ set(MGZ_COMPRESS_SOURCES
   compressor/raw.cc
   archive/internal/common.cc
   archive/unzip.cc
-  # FIXME : archive/zip.cc
+  archive/zip.cc
   )
 add_library(mgz-compress SHARED ${MGZ_COMPRESS_SOURCES})
 target_link_libraries(mgz-compress mgz-util mgz-security mgz-io)

@@ -95,3 +95,7 @@ add_executable(filesystem_unittest "filesystem_unittest.cc")
 target_link_libraries(filesystem_unittest ${TESTS_LIBS})
 add_test(FILESYSTEM_UNITTEST filesystem_unittest)
 
+add_executable(zip_unittest "zip_unittest.cc")
+target_link_libraries(zip_unittest ${TESTS_LIBS})
+add_test(ZIP_UNITTEST zip_unittest)
+

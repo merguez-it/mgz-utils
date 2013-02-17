@@ -89,7 +89,7 @@ namespace mgz {
         return pos;
       }
 
-      central_directory_header zip::compress_and_write_data (Glow::Command::compressor &comp, const central_directory_header& cdh) {
+      central_directory_header zip::compress_and_write_data (mgz::compress::compressor &comp, const central_directory_header& cdh) {
         central_directory_header result=cdh;
         central_directory_header_static &hdr=result.static_part;
         long positionflux=archive_stream_.tellp();

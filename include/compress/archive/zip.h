@@ -27,7 +27,7 @@ namespace mgz {
 
           void add_file(mgz::io::file &fileToAdd, const mgz::io::file &base_dir);  
 
-          compress(const mgz::io::file &archive, unsigned short compression_method=CM_DEFLAT, int level=Glow::Command::COMPRESSION_LEVEL_4);
+          zip(const mgz::io::file &archive, unsigned short compression_method=CM_DEFLAT, int level=mgz::compress::COMPRESSION_LEVEL_4);
 
           void deflate(); // Do THE job.
 
@@ -60,7 +60,7 @@ namespace mgz {
           unsigned long write_local_file_header(const local_file_header& lfh);
 
           // Compress a file to an archive, given a compressor. Central directory header is updated according to compression results.
-          central_directory_header compress_and_write_data(Glow::Command::compressor &comp, const central_directory_header &cdh);
+          central_directory_header compress_and_write_data(mgz::compress::compressor &comp, const central_directory_header &cdh);
 
           // Writes the central directory into the archive stream.
           void write_central_directory();
