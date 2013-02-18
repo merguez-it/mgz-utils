@@ -5,7 +5,6 @@
 #include "config-test.h"
 #include "util/getopt.h"
 
-
 #define ARGC (sizeof(argv)/sizeof(const char*))
 
 TEST(Getopt, TestOne) {
