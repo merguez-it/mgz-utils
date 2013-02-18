@@ -2,6 +2,7 @@ project(MGZ_UTILS_UTIL_LIB)
 include_directories(${MGZ_UTILS_SOURCE_DIR}/include)
 
 set(MGZ_UTIL_SOURCES
+  getopt.cc
   internal/strptime.c
   datetime.cc
   internal/varg.cc

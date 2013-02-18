@@ -53,6 +53,10 @@ add_executable(exception_unittest "exception_unittest.cc")
 target_link_libraries(exception_unittest ${TESTS_LIBS})
 add_test(EXCEPTION_UNITTEST exception_unittest)
 
+add_executable(getopt_unittest "getopt_unittest.cc")
+target_link_libraries(getopt_unittest ${TESTS_LIBS})
+add_test(GETOPT_UNITTEST getopt_unittest)
+
 add_executable(file_unittest "file_unittest.cc")
 target_link_libraries(file_unittest ${TESTS_LIBS})
 add_test(FILE_UNITTEST file_unittest)
