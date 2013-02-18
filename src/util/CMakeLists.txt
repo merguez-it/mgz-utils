@@ -2,6 +2,7 @@ project(MGZ_UTILS_UTIL_LIB)
 include_directories(${MGZ_UTILS_SOURCE_DIR}/include)
 
 set(MGZ_UTIL_SOURCES
+  getopt.cc
   internal/strptime.c
   datetime.cc
   internal/varg.cc
@@ -24,6 +25,7 @@ set(MGZ_UTIL_HEADERS
   ${MGZ_UTILS_SOURCE_DIR}/include/util/string.h
   ${MGZ_UTILS_SOURCE_DIR}/include/util/types.h
   ${MGZ_UTILS_SOURCE_DIR}/include/util/vector.h
+  ${MGZ_UTILS_SOURCE_DIR}/include/util/getopt.h
   )
 install(FILES ${MGZ_UTIL_HEADERS} DESTINATION include/util)
 install(TARGETS mgz-util mgz-util-s
