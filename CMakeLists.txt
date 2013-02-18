@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 2.8)
 project(MGZ_UTILS)
-set(MGZ_UTILS_VERSION 0.0.2)
+set(MGZ_UTILS_VERSION 0.0.2 GLOBAL)
+set(MGZ_UTILS_LVERSION 0 GLOBAL)
+
+set(CMAKE_MODULE_PATH ${MGZ_UTILS_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
 include(FindDoxygen)
 include(CheckFunctionExists) 
@@ -10,6 +13,7 @@ include(CheckIncludeFileCXX)
 include(CheckCSourceCompiles)
 include(CheckCCompilerFlag)
 include(CheckCXXCompilerFlag)
+include(MgzUtils)
 
 add_definitions(-Wall)
 if(DEBUG)
@@ -27,6 +31,10 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 else()
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__UNIX__")
   set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -D__UNIX__")
+endif()
+
+if(MINGW)
+  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -static-libstdc++ -static-libgcc")
 endif()
 
 if(CPP11) 

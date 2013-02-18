@@ -11,21 +11,21 @@ set(MGZ_IO_SOURCES
 add_library(mgz-io SHARED ${MGZ_IO_SOURCES})
 target_link_libraries(mgz-io mgz-util mgz-regex mgz-security mgz-xml)
 add_library(mgz-io-s STATIC ${MGZ_IO_SOURCES})
+set_mgz_version(mgz-io-s mgz-io)
 
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/mgz-io.pc.in
   ${MGZ_UTILS_OUTPUT_TEMP_DIR}/mgz-io.pc
   @ONLY
   )
-set(MGZ_IO_HEADERS 
-  ${MGZ_UTILS_SOURCE_DIR}/include/io/faststream.h
-  ${MGZ_UTILS_SOURCE_DIR}/include/io/file.h
-  ${MGZ_UTILS_SOURCE_DIR}/include/io/properties.h
-  ${MGZ_UTILS_SOURCE_DIR}/include/io/stream.h
-  )
 
-install(FILES ${MGZ_IO_HEADERS} DESTINATION include/io)
+install(DIRECTORY ${MGZ_UTILS_SOURCE_DIR}/include/io
+  DESTINATION include
+  PATTERN "internal" EXCLUDE
+  )
 install(TARGETS mgz-io mgz-io-s
   LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib)
+  ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION lib
+  )
 install(FILES ${MGZ_UTILS_OUTPUT_TEMP_DIR}/mgz-io.pc DESTINATION lib/pkgconfig)

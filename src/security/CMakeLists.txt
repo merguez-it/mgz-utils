@@ -12,22 +12,21 @@ set(MGZ_SECURITY_SOURCES
 add_library(mgz-security SHARED ${MGZ_SECURITY_SOURCES})
 target_link_libraries(mgz-security mgz-util)
 add_library(mgz-security-s STATIC ${MGZ_SECURITY_SOURCES})
+set_mgz_version(mgz-security-s mgz-security)
 
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/mgz-security.pc.in
   ${MGZ_UTILS_OUTPUT_TEMP_DIR}/mgz-security.pc
   @ONLY
   )
-set(MGZ_SECURITY_HEADERS 
-  ${MGZ_UTILS_SOURCE_DIR}/include/security/adler32.h
-  ${MGZ_UTILS_SOURCE_DIR}/include/security/md5.h
-  ${MGZ_UTILS_SOURCE_DIR}/include/security/sha1.h
-  ${MGZ_UTILS_SOURCE_DIR}/include/security/sha2.h
-  ${MGZ_UTILS_SOURCE_DIR}/include/security/crc32.h
-  ${MGZ_UTILS_SOURCE_DIR}/include/security/ripem.h
+
+install(DIRECTORY ${MGZ_UTILS_SOURCE_DIR}/include/security
+  DESTINATION include
+  PATTERN "internal" EXCLUDE
   )
-install(FILES ${MGZ_SECURITY_HEADERS} DESTINATION include/security)
 install(TARGETS mgz-security mgz-security-s
   LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib)
+  ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION lib
+  )
 install(FILES ${MGZ_UTILS_OUTPUT_TEMP_DIR}/mgz-security.pc DESTINATION lib/pkgconfig)

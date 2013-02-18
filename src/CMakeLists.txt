@@ -14,3 +14,5 @@ add_subdirectory(io)
 add_subdirectory(security)
 add_subdirectory(xml)
 add_subdirectory(compress)
+add_subdirectory(debug)
+

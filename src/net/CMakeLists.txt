@@ -7,20 +7,22 @@ set(MGZ_NET_SOURCES
   )
 add_library(mgz-net SHARED ${MGZ_NET_SOURCES})
 target_link_libraries(mgz-net mgz-util)
-
 add_library(mgz-net-s STATIC ${MGZ_NET_SOURCES})
+set_mgz_version(mgz-net-s mgz-net)
 
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/mgz-net.pc.in
   ${MGZ_UTILS_OUTPUT_TEMP_DIR}/mgz-net.pc
   @ONLY
   )
-set(MGZ_NET_HEADERS 
-  ${MGZ_UTILS_SOURCE_DIR}/include/net/uri.h
-  ${MGZ_UTILS_SOURCE_DIR}/include/net/mime.h
+
+install(DIRECTORY ${MGZ_UTILS_SOURCE_DIR}/include/net
+  DESTINATION include
+  PATTERN "internal" EXCLUDE
   )
-install(FILES ${MGZ_NET_HEADERS} DESTINATION include/net)
 install(TARGETS mgz-net mgz-net-s
   LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib)
+  ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION lib
+  )
 install(FILES ${MGZ_UTILS_OUTPUT_TEMP_DIR}/mgz-net.pc DESTINATION lib/pkgconfig)
