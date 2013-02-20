@@ -14,11 +14,13 @@
 #include <vector>
 #include <utility>
 #include <algorithm>
+
+#include "mgz/export.h"
 #include "io/file.h"
 
 #define PROPERTIES_SEPARATOR ','
 
-class CantStorePropertiesException{};
+class MGZ_API CantStorePropertiesException{};
 
 /*! \namespace mgz
  * 
@@ -31,10 +33,10 @@ namespace mgz {
    */ 
   namespace io {
     
-    class PropertyFileNotFoundException {};
-    class PropertyFileOpenException {};
+    class MGZ_API PropertyFileNotFoundException {};
+    class MGZ_API PropertyFileOpenException {};
     
-    class properties {
+    class MGZ_API properties {
       public:
         /*!
          * \brief Create an empty property list

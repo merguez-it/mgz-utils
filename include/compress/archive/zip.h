@@ -3,16 +3,18 @@
 
 #include <fstream>
 #include <map>
+
+#include "mgz/export.h"
 #include "io/file.h"
 #include "util/exception.h"
 #include "compress/compressor.h"
 #include "compress/archive/lib_zip.h"
 
 // Exceptions possibly thrown
-class NonExistingFileToCompressException{};
-class CantOpenStreamException{};
-class CantGetStreamPositionException{};
-class NothingToCompressException{};
+class MGZ_API NonExistingFileToCompressException{};
+class MGZ_API CantOpenStreamException{};
+class MGZ_API CantGetStreamPositionException{};
+class MGZ_API NothingToCompressException{};
 
 #define NOT_INITIALIZED_W 0x6969
 #define NOT_INITIALIZED_L 0x69696969
@@ -21,7 +23,7 @@ class NothingToCompressException{};
 namespace mgz {
   namespace compress {
     namespace archive {
-      class zip {
+      class MGZ_API zip {
         public:
           std::map<std::string,central_directory_header> catalog; // Should be filled using "add" prior to call deflate();
 

@@ -6,10 +6,11 @@
 #include <stdint.h>
 #include <cstdio>
 #include <vector>
+#include "mgz/export.h"
 
 namespace mgz {
   namespace security {
-    class md5sum {
+    class MGZ_API md5sum {
       public:
         md5sum();
 
@@ -53,7 +54,7 @@ namespace mgz {
         static inline void II(uint4 &a, uint4 b, uint4 c, uint4 d, uint4 x, uint4 s, uint4 ac);
     };
 
-    std::string md5(const std::string str);
+    MGZ_API std::string __cdecl md5(const std::string str);
   }
 }
 

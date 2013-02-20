@@ -1,12 +1,21 @@
 project(MGZ_UTILS_UTIL_LIB)
 include_directories(${MGZ_UTILS_SOURCE_DIR}/include)
 
+if(WIN32)
+  configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/mgz-util.rc.in
+    ${MGZ_UTILS_OUTPUT_TEMP_DIR}/mgz-util.rc
+    )
+  set(MGZ_UTILS_UTIL_RC ${MGZ_UTILS_OUTPUT_TEMP_DIR}/mgz-util.rc)
+endif()
+
 set(MGZ_UTIL_SOURCES
   getopt.cc
   internal/strptime.c
   datetime.cc
   internal/varg.cc
   string.cc
+  ${MGZ_UTILS_UTIL_RC}
   )
 add_library(mgz-util SHARED ${MGZ_UTIL_SOURCES})
 add_library(mgz-util-s STATIC ${MGZ_UTIL_SOURCES})

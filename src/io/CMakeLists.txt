@@ -1,12 +1,21 @@
 project(MGZ_UTILS_IO_LIB)
 include_directories(${MGZ_UTILS_SOURCE_DIR}/include)
 
+if(WIN32)
+  configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/mgz-io.rc.in
+    ${MGZ_UTILS_OUTPUT_TEMP_DIR}/mgz-io.rc
+    )
+  set(MGZ_UTILS_IO_RC ${MGZ_UTILS_OUTPUT_TEMP_DIR}/mgz-io.rc)
+endif()
+
 set(MGZ_IO_SOURCES
   file.cc
   properties.cc
   faststream.cc
   stream.cc
   filesystem.cc
+  ${MGZ_UTILS_IO_RC}
   )
 add_library(mgz-io SHARED ${MGZ_IO_SOURCES})
 target_link_libraries(mgz-io mgz-util mgz-regex mgz-security mgz-xml)

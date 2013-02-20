@@ -8,6 +8,7 @@
  */
 #include <map>
 #include <string>
+#include "mgz/export.h"
 // scheme://[username[:password]@][host[:port]/path[/path]*[?key=value[&key=value[&...]]]
 
 /*! \namespace mgz
@@ -24,7 +25,7 @@ namespace mgz {
      * \class mgz::net::uri
      * \brief Class that parse std::string to URI
      */
-    class uri {
+    class MGZ_API uri {
       public:
         /*!
          * \brief Create an empty uri object

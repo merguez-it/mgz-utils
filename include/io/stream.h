@@ -8,6 +8,7 @@
  */
 #include <string>
 #include <fstream>
+#include "mgz/export.h"
 
 /*! \namespace mgz
  *
@@ -26,7 +27,7 @@ namespace mgz {
      * \param t : string object where the extracted line is stored.
      * \return The same as is
      */
-    std::istream & get_line(std::istream & is, std::string & t);
+    MGZ_API std::istream& __cdecl get_line(std::istream & is, std::string & t);
   }
 }
 #endif // __MGZ_IO_STREAM_H

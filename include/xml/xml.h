@@ -30,6 +30,7 @@
 #pragma warning( disable : 4786 )
 #endif
 
+#include "mgz/export.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -112,7 +113,7 @@ namespace mgz {
 
       @sa node::Accept()
       */
-    class visitor
+    class MGZ_API visitor
     {
       public:
         virtual ~visitor() {}
@@ -178,7 +179,7 @@ namespace mgz {
       A Decleration contains: Attributes (not on tree)
       @endverbatim
       */
-    class base
+    class MGZ_API base
     {
       friend class node;
       friend class element;
@@ -405,7 +406,7 @@ namespace mgz {
       in a document, or stand on its own. The type of a node
       can be queried, and it can be cast to its more defined type.
       */
-    class node : public base
+    class MGZ_API node : public base
     {
       friend class document;
       friend class element;
@@ -742,7 +743,7 @@ uses a different memory model than the other insert functions.
       part of the glowXML document object model. There are other
       suggested ways to look at this problem.
       */
-    class attribute : public base
+    class MGZ_API attribute : public base
     {
       friend class attributeSet;
 
@@ -860,7 +861,7 @@ returns: the next char after the value end quote
         - I like circular lists
         - it demonstrates some independence from the (typical) doubly linked list.
         */
-    class attributeSet
+    class MGZ_API attributeSet
     {
       public:
         attributeSet();
@@ -895,7 +896,7 @@ returns: the next char after the value end quote
       and can contain other elements, text, comments, and unknowns.
       Elements also contain an arbitrary number of attributes.
       */
-    class element : public node
+    class MGZ_API element : public node
     {
       public:
         /// Construct an element.
@@ -1107,7 +1108,7 @@ returns: next char past '>'
 
     /**	An XML comment.
     */
-    class comment : public node
+    class MGZ_API comment : public node
     {
       public:
         /// Constructs an empty comment.
@@ -1155,7 +1156,7 @@ returns: next char past '>'
       you generally want to leave it alone, but you can change the output mode with 
       SetCDATA() and query it with CDATA().
       */
-    class text : public node
+    class MGZ_API text : public node
     {
       friend class element;
       public:
@@ -1224,7 +1225,7 @@ Note: In this version of the code, the attributes are
 handled as special cases, not generic attributes, simply
 because there can only be at most 3 and they are always the same.
 */
-    class declaration : public node
+    class MGZ_API declaration : public node
     {
       public:
         /// Construct an empty declaration.
@@ -1289,7 +1290,7 @@ because there can only be at most 3 and they are always the same.
 
       DTD tags get thrown into unknowns.
       */
-    class unknown : public node
+    class MGZ_API unknown : public node
     {
       public:
         unknown() : node( node::MGZXML_UNKNOWN )	{}
@@ -1326,7 +1327,7 @@ because there can only be at most 3 and they are always the same.
       XML pieces. It can be saved, loaded, and printed to the screen.
       The 'value' of a document node is the xml file name.
       */
-    class document : public node
+    class MGZ_API document : public node
     {
       public:
         /// Create an empty document, that has no name.
@@ -1565,7 +1566,7 @@ because there can only be at most 3 and they are always the same.
     }
     @endverbatim
       */
-      class handle
+      class MGZ_API handle
       {
         public:
           /// Create a handle from any node (at any depth of the tree.) This can be a null pointer.
@@ -1662,7 +1663,7 @@ because there can only be at most 3 and they are always the same.
       fprintf( stdout, "%s", printer.CStr() );
       @endverbatim
       */
-    class printer : public visitor
+    class MGZ_API printer : public visitor
     {
       public:
         printer() : depth( 0 ), simpleTextPrint( false ),

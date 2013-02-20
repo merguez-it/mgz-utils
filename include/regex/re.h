@@ -6,6 +6,7 @@
  * \brief Simple regex class
  * \author Grégoire Lejeune
  */
+#include "mgz/export.h"
 #include "regex/trex.h"
 #include <string>
 #include <vector>
@@ -20,12 +21,12 @@ namespace mgz {
    * \brief Namespace for mgz regex tools
    */ 
   namespace regex {
-    class RegexException {};
+    class MGZ_API RegexException {};
     /*!
      * \class mgz::regex::RE
      * \brief Simple regex class
      */
-    class RE {
+    class MGZ_API RE {
       struct capture_t {
         size_t pos;
         size_t len;

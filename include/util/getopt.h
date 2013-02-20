@@ -5,6 +5,7 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include "mgz/export.h"
 #include "util/types.h"
 
 namespace mgz {
@@ -15,7 +16,7 @@ namespace mgz {
       DATA
     };
 
-    class getopt {
+    class MGZ_API getopt {
       public:
         getopt(int argc, const char *argv[]);
 

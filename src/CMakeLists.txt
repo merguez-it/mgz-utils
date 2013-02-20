@@ -7,6 +7,11 @@ configure_file(
   )
 install(FILES ${MGZ_UTILS_OUTPUT_TEMP_DIR}/mgz-all.pc DESTINATION lib/pkgconfig)
 
+install(DIRECTORY ${MGZ_UTILS_SOURCE_DIR}/include/mgz
+  DESTINATION include
+  PATTERN "internal" EXCLUDE
+  )
+
 add_subdirectory(util)
 add_subdirectory(net)
 add_subdirectory(regex)

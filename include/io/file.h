@@ -14,6 +14,7 @@
 #include <vector>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include "mgz/export.h"
 #include "security/crc32.h"
 #ifdef __WIN32__
 #include <direct.h>
@@ -42,20 +43,20 @@
 #define FILE_SEPARATOR_CHAR ((std::string(FILE_SEPARATOR).c_str())[0])
 #define ALTERNATE_FILE_SEPARATOR_CHAR ((std::string(ALTERNATE_FILE_SEPARATOR).c_str())[0])
 
-class CantReadFileStatusException{};
-class CantSetPermissionsException{};
+class MGZ_API CantReadFileStatusException{};
+class MGZ_API CantSetPermissionsException{};
 
 /*! \class FileShouldExistException
  *
  * Exception thrown when attempting to access a non existing for reading.
  */
-class FileShouldExistException{};
+class MGZ_API FileShouldExistException{};
 
 /*! \class FileShouldNotBeFolderException
  *
  * Exception thrown when attempting to operate on an mgz::io::file that is not supposed to be a folder.
  */
-class FileShouldNotBeFolderException{};
+class MGZ_API FileShouldNotBeFolderException{};
 
 /*! \namespace mgz
  *
@@ -71,7 +72,7 @@ namespace mgz {
      *
      * An abstract representation of file and directory pathnames.
      */
-    class file {
+    class MGZ_API file {
       public:
         /*!
          * \brief Create a file with the given path

@@ -6,12 +6,13 @@
 #include <stdint.h>
 #include <cstdio>
 #include <vector>
+#include "mgz/export.h"
 
 #define SHA_BLOCKSIZE  64
 
 namespace mgz {
   namespace security {
-    class sha1sum {
+    class MGZ_API sha1sum {
       public:
         sha1sum();
 
@@ -40,7 +41,7 @@ namespace mgz {
         int local;
     };
 
-    std::string sha1(const std::string & data);
+    MGZ_API std::string __cdecl sha1(const std::string & data);
   }
 }
 

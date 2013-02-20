@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include "mgz/export.h"
 
 namespace mgz {
   namespace security {
@@ -34,7 +35,7 @@ namespace mgz {
         unsigned int ripem_[5];
     };
 
-    class ripem128sum : public ripem {
+    class MGZ_API ripem128sum : public ripem {
       public:
         ripem128sum();
 
@@ -42,9 +43,9 @@ namespace mgz {
         void compress(unsigned int *X);
     };
 
-    std::string ripem128(const std::string & buffer);
+    MGZ_API std::string __cdecl ripem128(const std::string & buffer);
 
-    class ripem160sum : public ripem {
+    class MGZ_API ripem160sum : public ripem {
       public:
         ripem160sum();
 
@@ -52,7 +53,7 @@ namespace mgz {
         void compress(unsigned int *X);
     };
 
-    std::string ripem160(const std::string & buffer);
+    MGZ_API std::string __cdecl ripem160(const std::string & buffer);
   }
 }
 

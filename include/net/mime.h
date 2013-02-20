@@ -12,6 +12,7 @@
 #include <map>
 #include <vector>
 #include <utility>
+#include "mgz/export.h"
 #include "util/singleton.h"
 
 #define DEFAULT_TYPE_EXTENSION "txt"
@@ -431,7 +432,7 @@ namespace mgz {
       int value;
     };
 
-    class mime : public ::Singleton<mgz::net::mime> {
+    class MGZ_API mime : public ::Singleton<mgz::net::mime> {
       friend class ::Singleton<mgz::net::mime>;
 
       public:
@@ -452,7 +453,7 @@ namespace mgz {
      * \class mime_type
      * \brief MIME/Type informations
      */
-    class mime_type {
+    class MGZ_API mime_type {
       public:
         mime_type(std::string ext);
         bool operator==(mime_type mt);

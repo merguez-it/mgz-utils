@@ -1,6 +1,7 @@
 #ifndef __MGZ_UTIL_STRING_H
 #define __MGZ_UTIL_STRING_H
 
+#include "mgz/export.h"
 #include <string>
 #include <vector>
 #include <utility>
@@ -8,32 +9,32 @@
 
 namespace mgz {
   namespace util {
-    std::string trim(const std::string &str);
-    std::string squeeze(const std::string & str);
-    std::vector<std::string>& split(const std::string &s, char delim, std::vector<std::string> &elems);
-    std::vector<std::string> split(const std::string &s, char delim);
-    std::string join(const std::vector<std::string> &vector, char delim);
-    std::string replace_delim(const std::string &s, char i, char t);
-    std::string to_upper(const std::string &s);
-    std::string to_lower(const std::string &s);
-    std::string classify(const std::string &s);
-    std::string format(const std::string & format, ...);
-    std::string random_string(const int len, const std::string &prefix = "");
+    MGZ_API std::string __cdecl trim(const std::string &str);
+    MGZ_API std::string __cdecl squeeze(const std::string & str);
+    MGZ_API std::vector<std::string>& __cdecl split(const std::string &s, char delim, std::vector<std::string> &elems);
+    MGZ_API std::vector<std::string> __cdecl split(const std::string &s, char delim);
+    MGZ_API std::string __cdecl join(const std::vector<std::string> &vector, char delim);
+    MGZ_API std::string __cdecl replace_delim(const std::string &s, char i, char t);
+    MGZ_API std::string __cdecl to_upper(const std::string &s);
+    MGZ_API std::string __cdecl to_lower(const std::string &s);
+    MGZ_API std::string __cdecl classify(const std::string &s);
+    MGZ_API std::string __cdecl format(const std::string & format, ...);
+    MGZ_API std::string __cdecl random_string(const int len, const std::string &prefix = "");
 
-    void replace_all(std::string& str, const std::string& from, const std::string& to);
-    std::string replace_all(const std::string &s, char i, char t);
-    std::string replace_all(const std::string & str, const std::string& from, const std::string& to);
+    MGZ_API void __cdecl replace_all(std::string& str, const std::string& from, const std::string& to);
+    MGZ_API std::string __cdecl replace_all(const std::string &s, char i, char t);
+    MGZ_API std::string __cdecl replace_all(const std::string & str, const std::string& from, const std::string& to);
 
-    int asInt(const std::string &intString);
-    int levenshtein_distance(const std::string &source, const std::string &target);
+    MGZ_API int __cdecl asInt(const std::string &intString);
+    MGZ_API int __cdecl levenshtein_distance(const std::string &source, const std::string &target);
 
     enum soundex_lang {
       FR,
       EN
     };
-    std::string soundex(enum soundex_lang lang, const std::string & input, const int resultLength);
+    MGZ_API std::string __cdecl soundex(enum soundex_lang lang, const std::string & input, const int resultLength);
 
-    class line {
+    class MGZ_API line {
       std::string data;
       public:
       friend std::istream &operator>>(std::istream &is, line &l) {
@@ -44,8 +45,8 @@ namespace mgz {
       operator std::string() const { return data; }
     };
 
-    std::string pluralize(const std::string &singular);
-    std::vector<std::string> explode(const std::string &s, const std::string &e);
+    MGZ_API std::string __cdecl pluralize(const std::string &singular);
+    MGZ_API std::vector<std::string> __cdecl explode(const std::string &s, const std::string &e);
 
     enum cut_keep {
       KEEP_LEFT,
@@ -53,14 +54,14 @@ namespace mgz {
       KEEP_BOOTH,
       KEEP_NONE
     };
-    std::pair<std::string, std::string> cut(const std::string &data, const std::string & sep, cut_keep keep = KEEP_NONE);
+    MGZ_API std::pair<std::string, std::string> __cdecl cut(const std::string &data, const std::string & sep, cut_keep keep = KEEP_NONE);
 
-    std::string red(const std::string & str);
-    std::string green(const std::string & str);
-    std::string yellow(const std::string & str);
-    std::string blue(const std::string & str);
-    std::string magenta(const std::string & str);
-    std::string cyan(const std::string & str);
+    MGZ_API std::string __cdecl red(const std::string & str);
+    MGZ_API std::string __cdecl green(const std::string & str);
+    MGZ_API std::string __cdecl yellow(const std::string & str);
+    MGZ_API std::string __cdecl blue(const std::string & str);
+    MGZ_API std::string __cdecl magenta(const std::string & str);
+    MGZ_API std::string __cdecl cyan(const std::string & str);
   }
 }
 #endif // __MGZ_UTIL_STRING_H

@@ -1,6 +1,7 @@
 #ifndef __MGZ_COMPRESS_ARCHIVE_UNZIP_H
 #define __MGZ_COMPRESS_ARCHIVE_UNZIP_H
 
+#include "mgz/export.h"
 #include "compress/archive/lib_zip.h"
 #include "io/file.h"
 #include "util/exception.h"
@@ -9,13 +10,13 @@
 #include <fstream>
 #include <vector>
 
-class MalformatedEndOfCentralDirectoryHeader {};
-class MalformatedCentralDirectoryHeader {};
+class MGZ_API MalformatedEndOfCentralDirectoryHeader {};
+class MGZ_API MalformatedCentralDirectoryHeader {};
 
-class MalformatedLocalFileHeader {};
+class MGZ_API MalformatedLocalFileHeader {};
 
-class UncompressError {};
-class UnsupportedCompressionMethod {};
+class MGZ_API UncompressError {};
+class MGZ_API UnsupportedCompressionMethod {};
 
 struct entry {
   unsigned int crc32;
@@ -32,7 +33,7 @@ struct entry {
 namespace mgz {
   namespace compress {
     namespace archive {
-      class unzip {
+      class MGZ_API unzip {
         public:
           unzip(mgz::io::file & archive);
           ~unzip();

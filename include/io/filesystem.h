@@ -11,6 +11,7 @@
 #include <string>
 #include <vector>
 
+#include "mgz/export.h"
 #include "io/file.h"
 #include "util/units.h"
 
@@ -51,14 +52,14 @@ namespace mgz {
      * bool filter(fs_diff d);
      * \endcode
      */
-    class fsfilter {
+    class MGZ_API fsfilter {
       public:
-      virtual bool filter(/*const*/ mgz::io::fs_diff& d) {
+        virtual bool filter(/*const*/ mgz::io::fs_diff& d) {
           return true;
         }
     };
 
-    class fs {
+    class MGZ_API fs {
       public:
         fs(std::string);
         fs(file & f);

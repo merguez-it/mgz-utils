@@ -226,13 +226,13 @@ namespace mgz {
 
           switch(header_id) {
             case EF_ZIP64:
-              std::cout << "EF_ZIP64" << std::endl;
+              // FIXME : EF_ZIP64
               break;
             case EF_NTFS:
-              std::cout << "EF_NTFS" << std::endl;
+              // FIXME : EF_NTFS
               break;
             case EF_UNIX:
-              std::cout << "EF_UNIX" << std::endl;
+              // FIXME : EF_UNIX
               break;
             default:
               // FIXME : Logger::warning("Unsupported extra field 0x%x", header_id);

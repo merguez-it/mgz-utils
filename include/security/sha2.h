@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <stdint.h>
+#include "mgz/export.h"
 
 #define SHA224_SIZE 224/8
 #define SHA256_SIZE 256/8
@@ -89,12 +90,12 @@ namespace mgz {
         unsigned char data_[SHA224_SIZE];
     };
 
-    class sha224sum : public sha2sum<sha224interface> {
+    class MGZ_API sha224sum : public sha2sum<sha224interface> {
       public: 
         sha224sum() : sha2sum<sha224interface>() {};
     };
 
-    std::string sha224(const std::string & data);
+    MGZ_API std::string __cdecl sha224(const std::string & data);
 
     class sha256interface : public sha224256 {
       public:
@@ -106,12 +107,12 @@ namespace mgz {
         unsigned char data_[SHA256_SIZE];
     };
 
-    class sha256sum : public sha2sum<sha256interface> {
+    class MGZ_API sha256sum : public sha2sum<sha256interface> {
       public:
         sha256sum() : sha2sum<sha256interface>() {};
     };
 
-    std::string sha256(const std::string & data);
+    MGZ_API std::string __cdecl sha256(const std::string & data);
 
     class sha384512 : public sha2common {
       public:
@@ -142,12 +143,12 @@ namespace mgz {
         unsigned char data_[SHA384_SIZE];
     };
 
-    class sha384sum : public sha2sum<sha384interface> {
+    class MGZ_API sha384sum : public sha2sum<sha384interface> {
       public: 
         sha384sum() : sha2sum<sha384interface>() {};
     };
 
-    std::string sha384(const std::string & data);
+    MGZ_API std::string __cdecl sha384(const std::string & data);
 
     class sha512interface : public sha384512 {
       public:
@@ -159,12 +160,12 @@ namespace mgz {
         unsigned char data_[SHA512_SIZE];
     };
 
-    class sha512sum : public sha2sum<sha512interface> {
+    class MGZ_API sha512sum : public sha2sum<sha512interface> {
       public:
         sha512sum() : sha2sum<sha512interface>() {};
     };
 
-    std::string sha512(const std::string & data);
+    MGZ_API std::string __cdecl sha512(const std::string & data);
   }
 }
 

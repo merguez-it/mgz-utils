@@ -1,9 +1,18 @@
 project(MGZ_UTILS_REGEX_LIB)
 include_directories(${MGZ_UTILS_SOURCE_DIR}/include)
 
+if(WIN32)
+  configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/mgz-regex.rc.in
+    ${MGZ_UTILS_OUTPUT_TEMP_DIR}/mgz-regex.rc
+    )
+  set(MGZ_UTILS_REGEX_RC ${MGZ_UTILS_OUTPUT_TEMP_DIR}/mgz-regex.rc)
+endif()
+
 set(MGZ_REGEX_SOURCES
   re.cc
   trex.c
+  ${MGZ_UTILS_REGEX_RC}
   )
 add_library(mgz-regex SHARED ${MGZ_REGEX_SOURCES})
 target_link_libraries(mgz-regex mgz-util)

@@ -6,12 +6,13 @@
 #include <stdint.h>
 #include <cstdio>
 #include <vector>
+#include "mgz/export.h"
 
 typedef unsigned long crc32_t;
 
 namespace mgz {
   namespace security {
-    class crc32sum {
+    class MGZ_API crc32sum {
       public:
         crc32sum();
 
@@ -35,8 +36,8 @@ namespace mgz {
         crc32_t crc;
     };
 
-    std::string crc32hex(const std::string & buffer);
-    crc32_t crc32(const std::string & buffer);
+    MGZ_API std::string __cdecl crc32hex(const std::string & buffer);
+    MGZ_API crc32_t __cdecl crc32(const std::string & buffer);
   }
 }
 

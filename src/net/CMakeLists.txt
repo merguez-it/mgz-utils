@@ -1,9 +1,18 @@
 project(MGZ_UTILS_NET_LIB)
 include_directories(${MGZ_UTILS_SOURCE_DIR}/include)
 
+if(WIN32)
+  configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/mgz-net.rc.in
+    ${MGZ_UTILS_OUTPUT_TEMP_DIR}/mgz-net.rc
+    )
+  set(MGZ_UTILS_NET_RC ${MGZ_UTILS_OUTPUT_TEMP_DIR}/mgz-net.rc)
+endif()
+
 set(MGZ_NET_SOURCES
   uri.cc
   mime.cc
+  ${MGZ_UTILS_NET_RC}
   )
 add_library(mgz-net SHARED ${MGZ_NET_SOURCES})
 target_link_libraries(mgz-net mgz-util)

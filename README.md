@@ -41,7 +41,7 @@ You need to install [MinGW](http://www.mingw.org/wiki/InstallationHOWTOforMinGW)
     cd <path to mgz-utils root>
     mkdir build
     cd build
-    cmake ..
+    cmake [-DCMAKE_INSTALL_PREFIX:PATH=/<path>] ..
     mingw32-make
     mingw32-make test
     mingw32-make doc

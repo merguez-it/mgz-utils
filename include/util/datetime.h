@@ -1,13 +1,14 @@
 #ifndef __MGZ_UTIL_DATETIME_H
 #define __MGZ_UTIL_DATETIME_H
 
+#include "mgz/export.h"
 #include <ctime>
 #include <string>
 #include <iostream>
 
 namespace mgz {
   namespace util {
-    class datetime {
+    class MGZ_API datetime {
       public:
         datetime(const datetime & dt);
         datetime(const std::string & f, const std::string & s);

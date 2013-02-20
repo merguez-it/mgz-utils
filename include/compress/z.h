@@ -5,6 +5,7 @@
 #include <vector>
 #include <fstream>
 
+#include "mgz/export.h"
 #include "compress/mgz_stream.h"
 #define BUFFER_SIZE 1<<15
 
@@ -18,7 +19,7 @@ namespace mgz {
       PKZIP
     };
 
-    class Z {
+    class MGZ_API Z {
       public:
         Z(CompressionType type);
 

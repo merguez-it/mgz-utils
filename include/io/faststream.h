@@ -3,15 +3,16 @@
 
 #include <string>
 #include <vector>
+#include "mgz/export.h"
 #include "io/file.h"
 
-class CantGetPagesize{};
-class InvalidPageSize{};
-class CantReadFile{};
-class CantWriteFile{};
-class ErrorWhileReadingFile{};
-class ErrorWhileWrittingingFile{};
-class CantGetFileSize{};
+class MGZ_API CantGetPagesize{};
+class MGZ_API InvalidPageSize{};
+class MGZ_API CantReadFile{};
+class MGZ_API CantWriteFile{};
+class MGZ_API ErrorWhileReadingFile{};
+class MGZ_API ErrorWhileWrittingingFile{};
+class MGZ_API CantGetFileSize{};
 
 namespace mgz {
   namespace io {
@@ -19,7 +20,7 @@ namespace mgz {
       in,
       out
     };
-    class faststream {
+    class MGZ_API faststream {
       public:
         faststream(const std::string & path, mode m);
         faststream(file f, mode m);

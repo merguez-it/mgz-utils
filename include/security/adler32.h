@@ -1,6 +1,7 @@
 #ifndef __MGZ_SECURITY_ADLER32_H
 #define __MGZ_SECURITY_ADLER32_H
 
+#include "mgz/export.h"
 #include <string>
 #include <iostream>
 #include <stdint.h>
@@ -11,7 +12,7 @@ typedef unsigned long adler32_t;
 
 namespace mgz {
   namespace security {
-    class adler32sum {
+    class MGZ_API adler32sum {
       public:
         adler32sum();
 
@@ -32,7 +33,7 @@ namespace mgz {
         adler32_t adler;
     };
 
-    adler32_t adler32(const std::string & buffer);
+    MGZ_API adler32_t __cdecl adler32(const std::string & buffer);
   }
 }
 
