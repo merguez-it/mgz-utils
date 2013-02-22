@@ -1,9 +1,7 @@
 #include "compress/archive/unzip.h"
 // FIXME : #include "util/log.h"
 #include "compress/compressor/raw.h"
-#ifdef __WIN32__
 #include <string.h>
-#endif
 #include <algorithm>
 
 namespace mgz {

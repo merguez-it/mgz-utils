@@ -5,6 +5,7 @@ libdir=${exec_prefix}/lib
 
 Name: mgz-compress
 Description: mgz-compress base library
-Version:@MGZ_UTILS_VERSION@ 
+URL: http://merguez-it.com
+Version: @MGZ_UTILS_VERSION@ 
 Cflags: -I${includedir}
 Libs: -L${libdir} -lmgz-util -lmgz-security -lmgz-io -lmgz-compress

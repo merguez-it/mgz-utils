@@ -5,6 +5,7 @@ libdir=${exec_prefix}/lib
 
 Name: mgz-net
 Description: mgz-net base library
-Version:@MGZ_UTILS_VERSION@ 
+URL: http://merguez-it.com
+Version: @MGZ_UTILS_VERSION@ 
 Cflags: -I${includedir}
 Libs: -L${libdir} -lmgz-util -lmgz-net

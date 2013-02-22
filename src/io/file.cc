@@ -14,6 +14,7 @@
 #include <sys/param.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <dirent.h>
 #include <unistd.h>
 #include <algorithm>
@@ -681,10 +682,10 @@ namespace mgz {
     struct tm file::get_modification_datetime() {
       time_t time_sec;
       initialize_status();
-#ifdef __WIN32__
-      time_sec=status_.st_mtime;
-#else
+#ifdef __APPLE__
       time_sec=status_.st_mtimespec.tv_sec;
+#else
+      time_sec=status_.st_mtime;
 #endif
       return (*localtime(&time_sec));
     }
@@ -695,10 +696,10 @@ namespace mgz {
     struct tm file::get_creation_datetime() {
       time_t time_sec;
       initialize_status();
-#ifdef __WIN32__
-      time_sec=status_.st_ctime;
-#else
+#ifdef __APPLE__
       time_sec=status_.st_birthtimespec.tv_sec;
+#else
+      time_sec=status_.st_ctime;
 #endif
       return (*localtime(&time_sec));
     }
